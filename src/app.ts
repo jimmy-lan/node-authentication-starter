@@ -7,7 +7,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 // Router Imports
-import { authRouter } from "./routers";
+import { authRouter } from "./routes";
 import { getMissingEnvVariables } from "./util";
 
 const app = express();
