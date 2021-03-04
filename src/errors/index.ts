@@ -4,3 +4,4 @@
  */
 
 export * from "./HttpError";
+export * from "./RequestValidationError";
