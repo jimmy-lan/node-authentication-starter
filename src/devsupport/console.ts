@@ -6,11 +6,15 @@
  *   console.warn, and console.error.
  */
 
+// Obtain needed variables
 const SERVER_NAME = process.env.SERVER_NAME || "Server";
 const PREFIX = `[${SERVER_NAME}]`;
 const IS_DEBUG =
   !process.env.DEBUG || process.env.DEBUG.toLowerCase() === "true";
 
+/**
+ * Return current time in the format hh:mm:ss.
+ */
 const getCurrentTimeString = (): string => {
   const date = new Date();
   const hour = date.getHours().toString().padStart(2, "0");

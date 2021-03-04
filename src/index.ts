@@ -27,7 +27,6 @@ app.listen(PORT, () => {
   console.group("Server started successfully.");
   console.info(`PORT: ${PORT}`);
   console.info(`ENV: ${ENVIRONMENT}`);
-  console.info(`TIME: ${new Date()}`);
+  console.info(`TIME: ${new Date()}\n`);
   console.groupEnd();
-  console.log();
 });
