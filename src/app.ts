@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 // Router Imports
 import { authRouter } from "./routes";
 import { getMissingEnvVariables } from "./util";
+import errorhandler from "errorhandler";
 
 const app = express();
 
@@ -47,5 +48,8 @@ app.use(express.json());
 
 // Register routers
 app.use("/api/v1/users", authRouter);
+
+// Error fallback
+app.use(errorhandler);
 
 export { app };
