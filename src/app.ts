@@ -24,10 +24,6 @@ if (missingVariables.length) {
   process.exit(1);
 }
 
-// App settings
-app.set("port", process.env.PORT || 3000);
-app.set("env", process.env.NODE_ENV || app.get("env"));
-
 // Connect to DB
 mongoose
   .connect(process.env.DB_URI!, {
@@ -41,6 +37,13 @@ mongoose
   .catch((error: Error) => {
     console.error(error);
   });
+
+// App settings
+app.set("port", process.env.PORT || 3000);
+app.set("env", process.env.NODE_ENV || app.get("env"));
+
+// Middlewares
+app.use(express.json());
 
 // Register routers
 app.use("/api/v1/users", authRouter);

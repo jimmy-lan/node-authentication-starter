@@ -4,11 +4,34 @@
  * Description: File holding a user model.
  */
 
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+/**
+ * Interface that describes the properties required
+ * when creating a new user.
+ * This interface allows intellisense and error checking
+ * when a user model is created.
+ */
+export interface UserProps {
+  email: string;
+  password: string;
+  passwordResetToken: string;
+  passwordResetExpire: Date;
+
+  profile: Partial<{
+    name: Partial<{
+      first: string;
+      last: string;
+    }>;
+    avatar: string;
+  }>;
+
+  dateJoined: Date;
+}
 
 /**
  * Interface that describes the properties in a user
- * document.
+ * document. Required by mongoose.
  */
 export type UserDocument = Document & {
   email: string;
@@ -28,7 +51,7 @@ export type UserDocument = Document & {
 };
 
 /**
- * Schema used to model users.
+ * Schema used to model users. Required by mongoose.
  */
 const userSchema = new Schema<UserDocument>(
   {
@@ -69,4 +92,25 @@ const userSchema = new Schema<UserDocument>(
   { timestamps: true }
 );
 
-export const User = mongoose.model<UserDocument>("User", userSchema);
+/**
+ * Interface that describes attributes associating
+ * with the User model.
+ */
+interface UserModel extends Model<UserDocument> {
+  build(props: Partial<UserProps>): UserDocument;
+}
+
+/**
+ * Return a user document with specified attr.
+ * Invoke by calling User.build().
+ *
+ * @param props Properties associating with the user
+ * @see UserProps
+ * @see UserModel
+ */
+const build = (props: Partial<UserProps>) => {
+  return new User(props);
+};
+userSchema.static("build", build);
+
+export const User = mongoose.model<UserDocument, UserModel>("User", userSchema);
