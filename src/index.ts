@@ -10,27 +10,12 @@ import errorhandler from "errorhandler";
 // dotenv files.
 config();
 
+import "./devsupport/console";
 import { app } from "./app";
-import { getMissingEnvVariables } from "./util";
 
 // Server configuration
-const PORT = process.env.PORT || 3000;
-const ENVIRONMENT = process.env.NODE_ENV || app.get("env");
-const SERVER_NAME = process.env.SERVER_NAME || "Server";
-
-// Check for missing environment variables
-const requiredVariables = ["DB_URI"];
-const missingVariables = getMissingEnvVariables(requiredVariables);
-
-if (missingVariables.length) {
-  console.error(
-    `[${SERVER_NAME}] Missing environment Variables: ${missingVariables.join(
-      ", "
-    )}`
-  );
-  console.warn(`[${SERVER_NAME}] Process exiting.`);
-  process.exit(1);
-}
+const PORT = app.get("port");
+const ENVIRONMENT = app.get("env");
 
 // Provide full stack trace
 if (ENVIRONMENT === "development") {
@@ -39,7 +24,7 @@ if (ENVIRONMENT === "development") {
 
 // Start server
 app.listen(PORT, () => {
-  console.group(`[${SERVER_NAME}] Server started successfully.`);
+  console.group("Server started successfully.");
   console.info(`PORT: ${PORT}`);
   console.info(`ENV: ${ENVIRONMENT}`);
   console.info(`TIME: ${new Date()}`);

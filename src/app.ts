@@ -8,8 +8,25 @@ import mongoose from "mongoose";
 
 // Router Imports
 import { authRouter } from "./routers";
+import { getMissingEnvVariables } from "./util";
 
 const app = express();
+
+// Check for missing environment variables
+const requiredVariables = ["DB_URI"];
+const missingVariables = getMissingEnvVariables(requiredVariables);
+
+if (missingVariables.length) {
+  console.error(
+    `Missing environment Variables: ${missingVariables.join(", ")}`
+  );
+  console.warn("Process exiting.");
+  process.exit(1);
+}
+
+// App settings
+app.set("port", process.env.PORT || 3000);
+app.set("env", process.env.NODE_ENV || app.get("env"));
 
 // Connect to DB
 mongoose
@@ -19,7 +36,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log(`[${app.get("name")}] Connected to database.`);
+    console.log(`Connected to database.`);
   })
   .catch((error: Error) => {
     console.error(error);
