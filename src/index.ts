@@ -6,17 +6,31 @@
 import { config } from "dotenv";
 import errorhandler from "errorhandler";
 
-import { app } from "./app";
-
-// Environmental variables
-// Remove this line if the variables are not loaded from
+// Remove this line if env variables are not loaded from
 // dotenv files.
 config();
 
-// Server configurations
+import { app } from "./app";
+import { getMissingEnvVariables } from "./util";
+
+// Server configuration
 const PORT = process.env.PORT || 3000;
 const ENVIRONMENT = process.env.NODE_ENV || app.get("env");
 const SERVER_NAME = process.env.SERVER_NAME || "Server";
+
+// Check for missing environment variables
+const requiredVariables = ["DB_URI"];
+const missingVariables = getMissingEnvVariables(requiredVariables);
+
+if (missingVariables.length) {
+  console.error(
+    `[${SERVER_NAME}] Missing environment Variables: ${missingVariables.join(
+      ", "
+    )}`
+  );
+  console.warn(`[${SERVER_NAME}] Process exiting.`);
+  process.exit(1);
+}
 
 // Provide full stack trace
 if (ENVIRONMENT === "development") {
@@ -30,4 +44,5 @@ app.listen(PORT, () => {
   console.info(`ENV: ${ENVIRONMENT}`);
   console.info(`TIME: ${new Date()}`);
   console.groupEnd();
+  console.log();
 });
