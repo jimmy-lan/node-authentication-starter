@@ -1,24 +1,26 @@
 /*
  * Created by Jimmy Lan
- * Creation Date: 2020-12-01
+ * Creation Date: 2021-03-05
  */
 
-import { scrypt, randomBytes } from "crypto";
-import { promisify } from "util";
-
-const scryptAsync = promisify(scrypt);
+import { compare, genSalt, hash } from "bcrypt";
+import { InternalServerError } from "../errors";
 
 export class PasswordEncoder {
-  static async toHash(password: string) {
-    const salt = randomBytes(8).toString("hex");
-    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  static async toHash(password: string): Promise<string> {
+    let buf;
 
-    return `${buf.toString("hex")}.${salt}`;
+    try {
+      const salt = await genSalt(12);
+      buf = await hash(password, salt);
+    } catch (error) {
+      throw new InternalServerError("Error in password processing.");
+    }
+
+    return buf;
   }
 
-  static async compare(password: string, encodedPassword: string) {
-    const [hashedPassword, salt] = encodedPassword.split(".");
-    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-    return buf.toString("hex") === hashedPassword;
+  static compare(password: string, encodedPassword: string): Promise<boolean> {
+    return compare(password, encodedPassword);
   }
 }
