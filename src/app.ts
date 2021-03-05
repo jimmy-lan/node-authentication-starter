@@ -11,6 +11,7 @@ import morgan from "morgan";
 import { authRouter } from "./routes";
 import { getMissingEnvVariables } from "./util";
 import { handleErrors } from "./middlewares";
+import { NotFoundError } from "./errors";
 
 const app = express();
 
@@ -50,7 +51,7 @@ app.use(
   morgan("tiny", {
     stream: {
       write(str: string) {
-        console.log(str);
+        console.log(str.trim());
       },
     },
   })
@@ -58,6 +59,11 @@ app.use(
 
 // Register routers
 app.use("/api/v1/users", authRouter);
+
+// Resource not found
+app.all("*", () => {
+  throw new NotFoundError();
+});
 
 // Error fallback
 app.use(handleErrors);

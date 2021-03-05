@@ -3,6 +3,7 @@
  * Creation Date: 2021-03-03
  * Description: Routers to handle user authentication.
  */
+
 import { Router, Request, Response } from "express";
 import { User } from "../models";
 import { body } from "express-validator";
@@ -13,10 +14,19 @@ const router = Router();
 router.post(
   "/signup",
   [
-    body("email").isEmail().isLength({ min: 6, max: 80 }),
-    body("password").isStrongPassword({ minLength: 6 }),
-    body("firstName").isLength({ min: 2, max: 50 }),
-    body("lastName").isLength({ min: 2, max: 50 }),
+    body("email").normalizeEmail().isEmail().isLength({ min: 6, max: 80 }),
+    // TODO Implement a stricter password security check
+    body("password").isLength({ min: 6, max: 50 }),
+    body("firstName")
+      .isString()
+      .isLength({ min: 2, max: 50 })
+      .not()
+      .contains(" "),
+    body("lastName")
+      .isString()
+      .isLength({ min: 2, max: 50 })
+      .not()
+      .contains(" "),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
