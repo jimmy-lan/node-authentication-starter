@@ -5,6 +5,7 @@
 
 import express from "express";
 import mongoose from "mongoose";
+import morgan from "morgan";
 
 // Router Imports
 import { authRouter } from "./routes";
@@ -45,6 +46,15 @@ app.set("env", process.env.NODE_ENV || app.get("env"));
 
 // Middlewares
 app.use(express.json());
+app.use(
+  morgan("tiny", {
+    stream: {
+      write(str: string) {
+        console.log(str);
+      },
+    },
+  })
+);
 
 // Register routers
 app.use("/api/v1/users", authRouter);
