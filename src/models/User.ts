@@ -4,7 +4,8 @@
  * Description: File holding a user model.
  */
 
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
+import { PasswordEncoder } from "../services/PasswordEncoder";
 
 /**
  * Interface that describes the properties required
@@ -89,7 +90,18 @@ const userSchema = new Schema<UserDocument>(
       avatar: String,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
+      versionKey: false,
+    },
+  }
 );
 
 /**
@@ -112,5 +124,13 @@ const build = (props: Partial<UserProps>) => {
   return new User(props);
 };
 userSchema.static("build", build);
+
+userSchema.pre<UserDocument>("save", async function (done: HookNextFunction) {
+  if (this.isModified("password")) {
+    const hashed = await PasswordEncoder.toHash(this.password);
+    this.set("password", hashed);
+  }
+  done();
+});
 
 export const User = mongoose.model<UserDocument, UserModel>("User", userSchema);
