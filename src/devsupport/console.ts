@@ -11,6 +11,9 @@ const SERVER_NAME = process.env.SERVER_NAME || "Server";
 const PREFIX = `[${SERVER_NAME}]`;
 const IS_DEBUG =
   !process.env.DEBUG || process.env.DEBUG.toLowerCase() === "true";
+const SHOULD_LOG_NAME =
+  !process.env.LOG_SERVER_NAME ||
+  process.env.LOG_SERVER_NAME.toLowerCase() === "true";
 
 /**
  * Return current time in the format hh:mm:ss.
@@ -35,7 +38,10 @@ const getNewLogMethod = (logMethod: Function, ignoreDebug: boolean = false) => (
 ) => {
   const argsList = Array.from(args);
   const timeString = getCurrentTimeString();
-  argsList.unshift(timeString, PREFIX);
+  if (SHOULD_LOG_NAME) {
+    argsList.unshift(PREFIX);
+  }
+  argsList.unshift(timeString);
   if (IS_DEBUG && !ignoreDebug) {
     logMethod.apply(console, argsList);
   }
