@@ -5,7 +5,7 @@
  */
 
 import { Router, Request, Response } from "express";
-import { User } from "../models";
+import { ResponseBody, User } from "../models";
 import { body } from "express-validator";
 import { validateRequest } from "../middlewares";
 
@@ -14,7 +14,10 @@ const router = Router();
 router.post(
   "/signup",
   [
-    body("email").normalizeEmail().isEmail().isLength({ min: 6, max: 80 }),
+    body("email")
+      .normalizeEmail({ gmail_remove_dots: false })
+      .isEmail()
+      .isLength({ min: 6, max: 80 }),
     // TODO Implement a stricter password security check
     body("password").isLength({ min: 6, max: 50 }),
     body("firstName")
@@ -29,7 +32,7 @@ router.post(
       .contains(" "),
   ],
   validateRequest,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response<ResponseBody>) => {
     const { email, password, firstName, lastName } = req.body;
 
     const user = User.build({
@@ -38,7 +41,7 @@ router.post(
       profile: { name: { first: firstName, last: lastName } },
     });
 
-    return res.send({ received: true });
+    return res.json({ success: true });
   }
 );
 
