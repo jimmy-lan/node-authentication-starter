@@ -43,7 +43,7 @@ router.post(
     const user = User.build({
       email,
       password,
-      clientSecret: PasswordEncoder.randomString(10),
+      clientSecret: PasswordEncoder.randomString(20),
       profile: { name: { first: firstName, last: lastName } },
       role: UserRole.member,
     });

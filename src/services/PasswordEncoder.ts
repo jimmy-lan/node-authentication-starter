@@ -26,8 +26,6 @@ export class PasswordEncoder {
   }
 
   static randomString(length: number): string {
-    return randomBytes(Math.ceil(length / 2))
-      .toString("hex")
-      .slice(0, length);
+    return randomBytes(64).toString("hex").slice(0, length);
   }
 }

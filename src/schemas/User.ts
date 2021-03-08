@@ -17,6 +17,7 @@ import { UserRole } from "../models";
 export interface UserProps {
   email: string;
   password: string;
+  // Used to generate unique refresh token for each client
   clientSecret: string;
   role: UserRole;
 
@@ -74,8 +75,7 @@ const userSchema = new Schema<UserDocument>(
     clientSecret: {
       type: String,
       required: true,
-      max: 10,
-      min: 8,
+      min: 10,
     },
     role: {
       type: String,
