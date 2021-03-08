@@ -26,8 +26,6 @@ export interface UserProps {
     }>;
     avatar: string;
   }>;
-
-  dateJoined: Date;
 }
 
 /**
@@ -47,7 +45,9 @@ export type UserDocument = Document & {
     avatar: string;
   };
 
-  dateJoined: Date;
+  // These fields are automatically appended by mongodb.
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 /**
