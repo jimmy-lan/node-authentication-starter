@@ -5,13 +5,38 @@
  */
 
 import jwt, { Algorithm, SignOptions, VerifyOptions } from "jsonwebtoken";
-import { TokenPayload } from "../models/Token";
 import { UnauthorizedError } from "../errors";
+
+export enum TokenType {
+  bearer = "bearer",
+  refresh = "refresh",
+  reset = "reset",
+}
+
+export interface TokenPayload {
+  sub: string;
+  iat: number;
+  exp?: number;
+  data?: Object;
+}
 
 export class TokenProcessor<T extends TokenPayload> {
   constructor(public algorithm: Algorithm) {}
 
-  issueToken(payload: T, secret: string, options?: SignOptions) {
+  issueToken(
+    payload: T,
+    secret: string,
+    tokenType: TokenType,
+    options?: SignOptions
+  ) {
+    if (tokenType === TokenType.refresh) {
+      // Set 5 minute expiration time for refresh tokens
+      payload.exp = payload.iat + 5 * 60 * 1000;
+    } else if (tokenType === TokenType.reset) {
+      // Set 10 minute expiration time for password reset
+      payload.exp = payload.iat + 10 * 60 * 1000;
+    }
+
     return jwt.sign(payload, secret, { algorithm: this.algorithm, ...options });
   }
 

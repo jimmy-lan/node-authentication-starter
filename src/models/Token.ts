@@ -4,19 +4,7 @@
  */
 
 import { UserRole } from "./UserRole";
-
-export enum TokenType {
-  bearer = "bearer",
-  refresh = "refresh",
-  reset = "reset",
-}
-
-export interface TokenPayload {
-  sub: string;
-  iat: number;
-  exp?: number;
-  data: Object;
-}
+import { TokenPayload } from "../services";
 
 export interface AuthTokenPayload extends TokenPayload {
   data: {
