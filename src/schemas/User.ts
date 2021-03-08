@@ -5,7 +5,7 @@
  */
 
 import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
-import { PasswordEncoder } from "../services/PasswordEncoder";
+import { PasswordEncoder } from "../services";
 import { UserRole } from "../models";
 
 /**
@@ -17,7 +17,8 @@ import { UserRole } from "../models";
 export interface UserProps {
   email: string;
   password: string;
-  // Used to generate unique refresh token for each client
+  // A unique chunk of string used to generate refresh token for
+  // clients
   clientSecret: string;
   role: UserRole;
 
@@ -34,10 +35,11 @@ export interface UserProps {
  * Interface that describes the properties in a user
  * document. Required by mongoose.
  */
-export type UserDocument = Document & {
+export type UserDocument = Document<UserProps> & {
   email: string;
   password: string;
-  // Used to generate unique refresh token for each client
+  // A unique chunk of string used to generate refresh token for
+  // clients
   clientSecret: string;
   role: UserRole;
 
@@ -119,7 +121,7 @@ const userSchema = new Schema<UserDocument>(
  * Interface that describes attributes associating
  * with the User model.
  */
-interface UserModel extends Model<UserDocument> {
+export interface UserModel extends Model<UserDocument> {
   build(props: Partial<UserProps>): UserDocument;
 }
 

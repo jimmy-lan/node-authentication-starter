@@ -5,12 +5,13 @@
  */
 
 import { Request, Response, Router } from "express";
+
 import { ResponseBody, UserRole } from "../../models";
 import { User } from "../../schemas";
 import { body } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
-import { PasswordEncoder } from "../../services/PasswordEncoder";
+import { PasswordEncoder } from "../../services";
 
 const router = Router();
 
