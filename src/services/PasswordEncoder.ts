@@ -4,6 +4,7 @@
  */
 
 import { compare, genSalt, hash } from "bcrypt";
+import { randomBytes } from "crypto";
 import { InternalServerError } from "../errors";
 
 export class PasswordEncoder {
@@ -22,5 +23,11 @@ export class PasswordEncoder {
 
   static compare(password: string, encodedPassword: string): Promise<boolean> {
     return compare(password, encodedPassword);
+  }
+
+  static randomString(length: number): string {
+    return randomBytes(Math.ceil(length / 2))
+      .toString("hex")
+      .slice(0, length);
   }
 }

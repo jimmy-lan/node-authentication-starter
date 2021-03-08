@@ -17,6 +17,7 @@ import { UserRole } from "../models";
 export interface UserProps {
   email: string;
   password: string;
+  clientSecret: string;
   role: UserRole;
 
   profile: Partial<{
@@ -35,6 +36,8 @@ export interface UserProps {
 export type UserDocument = Document & {
   email: string;
   password: string;
+  // Used to generate unique refresh token for each client
+  clientSecret: string;
   role: UserRole;
 
   profile: {
@@ -67,6 +70,12 @@ const userSchema = new Schema<UserDocument>(
       type: String,
       max: 1024,
       min: 6,
+    },
+    clientSecret: {
+      type: String,
+      required: true,
+      max: 10,
+      min: 8,
     },
     role: {
       type: String,
@@ -131,6 +140,9 @@ userSchema.pre<UserDocument>("save", async function (done: HookNextFunction) {
   if (this.isModified("password")) {
     const hashed = await PasswordEncoder.toHash(this.password);
     this.set("password", hashed);
+    // Generate new client secret to revoke previous tokens
+    const secret = PasswordEncoder.randomString(10);
+    this.set("clientSecret", secret);
   }
   done();
 });
