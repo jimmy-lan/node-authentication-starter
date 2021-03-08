@@ -10,6 +10,7 @@ import { User } from "../../schemas";
 import { body } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
+import { PasswordEncoder } from "../../services/PasswordEncoder";
 
 const router = Router();
 
@@ -42,6 +43,7 @@ router.post(
     const user = User.build({
       email,
       password,
+      clientSecret: PasswordEncoder.randomString(10),
       profile: { name: { first: firstName, last: lastName } },
       role: UserRole.member,
     });
