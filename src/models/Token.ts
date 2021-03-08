@@ -3,6 +3,8 @@
  * Creation Date: 2021-03-08
  */
 
+import { UserRole } from "./UserRole";
+
 export enum TokenType {
   bearer = "bearer",
   refresh = "refresh",
@@ -14,4 +16,10 @@ export interface TokenPayload {
   iat: number;
   exp?: number;
   data: Object;
+}
+
+export interface AuthTokenPayload extends TokenPayload {
+  data: {
+    role: UserRole;
+  };
 }
