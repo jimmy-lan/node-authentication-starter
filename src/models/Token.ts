@@ -8,3 +8,10 @@ export enum TokenType {
   refresh = "refresh",
   reset = "reset",
 }
+
+export interface TokenPayload {
+  sub: string;
+  iat: number;
+  exp?: number;
+  data: Object;
+}

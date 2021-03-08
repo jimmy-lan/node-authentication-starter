@@ -4,48 +4,40 @@
  * Description: Token processing utility class.
  */
 
-import jwt from "jsonwebtoken";
-
-import { UserDocument, UserModel } from "../schemas";
+import jwt, { Algorithm, SignOptions, VerifyOptions } from "jsonwebtoken";
+import { TokenPayload } from "../models/Token";
 import { UnauthorizedError } from "../errors";
 
-export class TokenProcessor {
-  static issueToken(user: UserDocument) {}
+export class TokenProcessor<T extends TokenPayload> {
+  constructor(public algorithm: Algorithm) {}
 
-  static async getBearer(
-    refreshToken: string,
-    User: UserModel,
-    refreshSecret: string,
-    bearerSecret: string
-  ) {
-    let userId;
+  issueToken(payload: T, secret: string, options?: SignOptions) {
+    return jwt.sign(payload, secret, { algorithm: this.algorithm, ...options });
+  }
+
+  decodeToken(token: string) {
+    let decoded;
     try {
-      const claims = jwt.decode(refreshToken, { json: true });
-      userId = claims?.sub;
+      decoded = jwt.decode(token, { json: true });
     } catch (error) {
+      console.error(error);
       throw new UnauthorizedError("Invalid token.");
     }
+    return decoded;
+  }
 
-    if (!userId) {
-      throw new UnauthorizedError("Invalid token.");
-    }
-
-    const user = await User.findById(userId).lean();
-
-    if (!user) {
-      throw new UnauthorizedError("Invalid token.");
-    }
-
-    const secret = refreshSecret + user.clientSecret;
-
+  verifyToken(token: string, secret: string, options?: VerifyOptions) {
+    let payload;
     try {
-      jwt.verify(refreshToken, secret);
+      payload = jwt.verify(token, secret, {
+        algorithms: [this.algorithm],
+        clockTolerance: 1,
+        ...options,
+      });
     } catch (error) {
-      throw new UnauthorizedError("Invalid token.");
+      console.error(error);
+      throw new UnauthorizedError("Invalid token");
     }
-
-    // Create new token
-
-    // Return bearer token
+    return payload;
   }
 }

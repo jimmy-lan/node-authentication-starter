@@ -5,3 +5,4 @@
 
 export * from "./UserRole";
 export * from "./ResponseBody";
+export * from "./TokenType";
