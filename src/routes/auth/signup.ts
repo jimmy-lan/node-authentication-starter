@@ -4,10 +4,12 @@
  * Description: Routers to handle user authentication.
  */
 
-import { Router, Request, Response } from "express";
-import { ResponseBody, User } from "../models";
+import { Request, Response, Router } from "express";
+import { ResponseBody, UserRole } from "../../models";
+import { User } from "../../schemas";
 import { body } from "express-validator";
-import { validateRequest } from "../middlewares";
+import { validateRequest } from "../../middlewares";
+import { BadRequestError } from "../../errors";
 
 const router = Router();
 
@@ -35,14 +37,35 @@ router.post(
   async (req: Request, res: Response<ResponseBody>) => {
     const { email, password, firstName, lastName } = req.body;
 
+    await abortIfUserExists(email);
+
     const user = User.build({
       email,
       password,
       profile: { name: { first: firstName, last: lastName } },
+      role: UserRole.member,
     });
 
-    return res.json({ success: true });
+    await user.save();
+
+    return res.status(201).json({ success: true, data: user });
   }
 );
 
-export { router as authRouter };
+/**
+ * Check if user with <email> exists. If true, throw
+ * an error to terminate the process.
+ *
+ * @param email user's email to be check
+ * @throws BadRequestError
+ */
+const abortIfUserExists = async (email: string) => {
+  const existingUser = await User.findOne({ email }).lean();
+
+  if (existingUser) {
+    const errorMessage = `Email ${email} is in use.`;
+    throw new BadRequestError(errorMessage);
+  }
+};
+
+export { router as signUpRouter };

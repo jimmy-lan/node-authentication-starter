@@ -6,6 +6,7 @@
 
 import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
 import { PasswordEncoder } from "../services/PasswordEncoder";
+import { UserRole } from "../models";
 
 /**
  * Interface that describes the properties required
@@ -16,8 +17,7 @@ import { PasswordEncoder } from "../services/PasswordEncoder";
 export interface UserProps {
   email: string;
   password: string;
-  passwordResetToken: string;
-  passwordResetExpire: Date;
+  role: UserRole;
 
   profile: Partial<{
     name: Partial<{
@@ -37,8 +37,7 @@ export interface UserProps {
 export type UserDocument = Document & {
   email: string;
   password: string;
-  passwordResetToken: string;
-  passwordResetExpire: Date;
+  role: UserRole;
 
   profile: {
     name: {
@@ -69,8 +68,11 @@ const userSchema = new Schema<UserDocument>(
       max: 1024,
       min: 6,
     },
-    passwordResetToken: String,
-    passwordResetExpire: Date,
+    role: {
+      type: String,
+      enum: Object.keys(UserRole),
+      required: true,
+    },
 
     profile: {
       name: {
