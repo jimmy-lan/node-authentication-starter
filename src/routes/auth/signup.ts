@@ -12,6 +12,7 @@ import { User } from "../../schemas";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
 import { PasswordEncoder } from "../../services";
+import { signTokens } from "./helpers";
 
 const router = Router();
 
@@ -51,7 +52,10 @@ router.post(
 
     await user.save();
 
-    return res.status(201).json({ success: true, data: user });
+    const [refreshToken, bearerToken] = signTokens(user);
+    const data = { refreshToken, bearerToken, email: user.email };
+
+    return res.status(201).json({ success: true, data });
   }
 );
 

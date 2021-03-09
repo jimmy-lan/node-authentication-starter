@@ -5,8 +5,14 @@
 
 import { UserDocument } from "../../schemas";
 import { TokenProcessor, TokenType } from "../../services";
-import { AuthTokenPayload } from "../../models/Token";
+import { AuthTokenPayload } from "../../models";
 
+/**
+ * Sign refresh and bearer tokens for `user`.
+ * @param user User document referring to the subject.
+ * @return An array of strings where the first item is the refresh token,
+ *   and the second item is the bearer token.
+ */
 export const signTokens = (user: UserDocument) => {
   const tokenProcessor = new TokenProcessor("RS512");
   const refreshToken = tokenProcessor.issueToken(
