@@ -29,12 +29,19 @@ export class TokenProcessor {
     tokenType: TokenType,
     options?: SignOptions
   ) {
-    if (tokenType === TokenType.refresh) {
-      // Set 5 minute expiration time for refresh tokens
-      payload.exp = payload.iat + 5 * 60 * 1000;
-    } else if (tokenType === TokenType.reset) {
-      // Set 10 minute expiration time for password reset
-      payload.exp = payload.iat + 10 * 60 * 1000;
+    switch (tokenType) {
+      case TokenType.refresh:
+        // Set 5 minute expiration time for refresh tokens
+        payload.exp = payload.iat + 5 * 60 * 1000;
+        break;
+      case TokenType.reset:
+        // Set 10 minute expiration time for password reset
+        payload.exp = payload.iat + 10 * 60 * 1000;
+        break;
+      case TokenType.bearer:
+        // Set 7 day expiration time for bearer tokens
+        payload.exp = payload.iat + 7 * 24 * 60 * 1000;
+        break;
     }
 
     return jwt.sign(payload, secret, { algorithm: this.algorithm, ...options });

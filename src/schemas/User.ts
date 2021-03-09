@@ -143,8 +143,8 @@ userSchema.pre<UserDocument>("save", async function (done: HookNextFunction) {
     const hashed = await PasswordEncoder.toHash(this.password);
     this.set("password", hashed);
     // Generate new client secret to revoke previous tokens
-    // const secret = PasswordEncoder.randomString(10);
-    // this.set("client", secret);
+    const secret = PasswordEncoder.randomString(20);
+    this.set("clientSecret", secret);
   }
   done();
 });
