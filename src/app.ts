@@ -17,7 +17,7 @@ import { NotFoundError } from "./errors";
 const app = express();
 
 // Check for missing environment variables
-const requiredVariables = ["DB_URI"];
+const requiredVariables = ["DB_URI", "BEARER_SECRET", "REFRESH_SECRET"];
 const missingVariables = getMissingEnvVariables(requiredVariables);
 
 if (missingVariables.length) {

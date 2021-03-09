@@ -20,10 +20,10 @@ export interface TokenPayload {
   data?: Object;
 }
 
-export class TokenProcessor<T extends TokenPayload> {
+export class TokenProcessor {
   constructor(public algorithm: Algorithm) {}
 
-  issueToken(
+  issueToken<T extends TokenPayload>(
     payload: T,
     secret: string,
     tokenType: TokenType,
@@ -51,14 +51,18 @@ export class TokenProcessor<T extends TokenPayload> {
     return decoded;
   }
 
-  verifyToken(token: string, secret: string, options?: VerifyOptions) {
-    let payload;
+  verifyToken<T extends TokenPayload>(
+    token: string,
+    secret: string,
+    options?: VerifyOptions
+  ) {
+    let payload: TokenPayload;
     try {
       payload = jwt.verify(token, secret, {
         algorithms: [this.algorithm],
         clockTolerance: 1,
         ...options,
-      });
+      }) as TokenPayload;
     } catch (error) {
       console.error(error);
       throw new UnauthorizedError("Invalid token");
