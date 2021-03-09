@@ -14,13 +14,16 @@ import { AuthTokenPayload } from "../../models";
  *   and the second item is the bearer token.
  */
 export const signTokens = (user: UserDocument) => {
-  const tokenProcessor = new TokenProcessor("RS512");
+  const tokenProcessor = new TokenProcessor("HS512");
+  const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
+  const bearerSecret = process.env.BEARER_SECRET!;
+
   const refreshToken = tokenProcessor.issueToken(
     {
       sub: user._id || user.id,
       iat: new Date().getTime(),
     },
-    process.env.REFRESH_SECRET!,
+    refreshSecret,
     TokenType.refresh
   );
   const bearerToken = tokenProcessor.issueToken<AuthTokenPayload>(
@@ -29,7 +32,7 @@ export const signTokens = (user: UserDocument) => {
       iat: new Date().getTime(),
       data: { role: user.role },
     },
-    process.env.BEARER_SECRET!,
+    bearerSecret,
     TokenType.bearer
   );
   return [refreshToken, bearerToken];
