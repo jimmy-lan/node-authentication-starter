@@ -42,7 +42,7 @@ const getNewLogMethod = (logMethod: Function, ignoreDebug: boolean = false) => (
     argsList.unshift(PREFIX);
   }
   argsList.unshift(timeString);
-  if (IS_DEBUG && !ignoreDebug) {
+  if (IS_DEBUG || ignoreDebug) {
     logMethod.apply(console, argsList);
   }
 };
