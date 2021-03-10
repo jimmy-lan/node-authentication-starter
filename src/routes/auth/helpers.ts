@@ -3,6 +3,8 @@
  * Creation Date: 2021-03-08
  */
 
+import { LeanDocument } from "mongoose";
+
 import { UserDocument } from "../../models";
 import { TokenProcessor, TokenType } from "../../services";
 import { AccessTokenPayload, RefreshTokenPayload } from "../../types";
@@ -13,7 +15,7 @@ import { AccessTokenPayload, RefreshTokenPayload } from "../../types";
  * @return An array of strings where the first item is the refresh token,
  *   and the second item is the access token.
  */
-export const signTokens = (user: UserDocument) => {
+export const signTokens = (user: UserDocument | LeanDocument<UserDocument>) => {
   const tokenProcessor = new TokenProcessor("HS512");
   const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
   const accessSecret = process.env.ACCESS_SECRET!;

@@ -63,15 +63,15 @@ export class TokenProcessor {
     secret: string,
     options?: VerifyOptions
   ) {
-    let payload: TokenPayload;
+    let payload: T;
     try {
       payload = jwt.verify(token, secret, {
         algorithms: [this.algorithm],
         clockTolerance: 1,
         ...options,
-      }) as TokenPayload;
+      }) as T;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       throw new UnauthorizedError("Invalid token");
     }
     return payload;
