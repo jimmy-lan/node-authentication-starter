@@ -8,6 +8,6 @@ import { signUpRouter } from "./signup";
 
 const router = Router();
 
-router.use(signUpRouter);
+router.use(signUpRouter, signUpRouter);
 
 export { router as authRouter };
