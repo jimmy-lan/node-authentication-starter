@@ -16,6 +16,6 @@ export interface AuthResPayload extends ResPayload {
   payload: {
     user: UserDocument | UserProps;
     refreshToken: string;
-    bearerToken: string;
+    accessToken: string;
   };
 }

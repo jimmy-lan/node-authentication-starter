@@ -5,20 +5,20 @@
 
 import { UserDocument } from "../../models";
 import { TokenProcessor, TokenType } from "../../services";
-import { AuthTokenPayload } from "../../types";
+import { AccessTokenPayload, RefreshTokenPayload } from "../../types";
 
 /**
- * Sign refresh and bearer tokens for `user`.
+ * Sign refresh and access tokens for `user`.
  * @param user User document referring to the subject.
  * @return An array of strings where the first item is the refresh token,
- *   and the second item is the bearer token.
+ *   and the second item is the access token.
  */
 export const signTokens = (user: UserDocument) => {
   const tokenProcessor = new TokenProcessor("HS512");
   const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
-  const bearerSecret = process.env.BEARER_SECRET!;
+  const accessSecret = process.env.ACCESS_SECRET!;
 
-  const refreshToken = tokenProcessor.issueToken(
+  const refreshToken = tokenProcessor.issueToken<RefreshTokenPayload>(
     {
       sub: user._id || user.id,
       iat: new Date().getTime(),
@@ -26,14 +26,14 @@ export const signTokens = (user: UserDocument) => {
     refreshSecret,
     TokenType.refresh
   );
-  const bearerToken = tokenProcessor.issueToken<AuthTokenPayload>(
+  const accessToken = tokenProcessor.issueToken<AccessTokenPayload>(
     {
-      sub: user._id || user.id,
+      sub: { id: user._id || user.id },
       iat: new Date().getTime(),
       data: { role: user.role },
     },
-    bearerSecret,
-    TokenType.bearer
+    accessSecret,
+    TokenType.access
   );
-  return [refreshToken, bearerToken];
+  return [refreshToken, accessToken];
 };

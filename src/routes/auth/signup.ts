@@ -51,8 +51,8 @@ router.post(
 
     await user.save();
 
-    const [refreshToken, bearerToken] = signTokens(user);
-    const payload = { refreshToken, bearerToken, user };
+    const [refreshToken, accessToken] = signTokens(user);
+    const payload = { refreshToken, accessToken, user };
 
     return res.status(201).json({ success: true, payload });
   }

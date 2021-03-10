@@ -6,8 +6,15 @@
 import { UserRole } from "./UserRole";
 import { TokenPayload } from "../services";
 
-export interface AuthTokenPayload extends TokenPayload {
+export interface AccessTokenPayload extends TokenPayload {
+  sub: {
+    id: string;
+  };
   data: {
     role: UserRole;
   };
+}
+
+export interface RefreshTokenPayload extends TokenPayload {
+  sub: string;
 }
