@@ -3,9 +3,9 @@
  * Creation Date: 2021-03-08
  */
 
-import { UserDocument } from "../../schemas";
+import { UserDocument } from "../../models";
 import { TokenProcessor, TokenType } from "../../services";
-import { AuthTokenPayload } from "../../models";
+import { AuthTokenPayload } from "../../types";
 
 /**
  * Sign refresh and bearer tokens for `user`.

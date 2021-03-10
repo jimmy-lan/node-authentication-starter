@@ -1,14 +1,13 @@
 /*
  * Created by Jimmy Lan
  * Creation Date: 2021-03-03
- * Description: Routers to handle user authentication.
  */
 
 import { Request, Response, Router } from "express";
 import { body } from "express-validator";
 
-import { ResponseBody, UserRole } from "../../models";
-import { User } from "../../schemas";
+import { ResPayload, UserRole } from "../../types";
+import { User } from "../../models";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
 import { PasswordEncoder } from "../../services";
@@ -37,7 +36,7 @@ router.post(
       .contains(" "),
   ],
   validateRequest,
-  async (req: Request, res: Response<ResponseBody>) => {
+  async (req: Request, res: Response<ResPayload>) => {
     const { email, password, firstName, lastName } = req.body;
 
     await abortIfUserExists(email);
@@ -53,9 +52,9 @@ router.post(
     await user.save();
 
     const [refreshToken, bearerToken] = signTokens(user);
-    const data = { refreshToken, bearerToken, email: user.email };
+    const payload = { refreshToken, bearerToken, user };
 
-    return res.status(201).json({ success: true, data });
+    return res.status(201).json({ success: true, payload });
   }
 );
 

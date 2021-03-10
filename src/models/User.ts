@@ -6,7 +6,7 @@
 
 import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
 import { PasswordEncoder } from "../services";
-import { UserRole } from "../models";
+import { UserRole } from "../types";
 
 /**
  * Interface that describes the properties required

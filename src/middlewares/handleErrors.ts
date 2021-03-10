@@ -4,10 +4,10 @@
  */
 import { Request, Response } from "express";
 import { HttpError } from "../errors";
-import { ResponseBody } from "../models";
+import { ResPayload } from "../types";
 
 export const handleErrors = (error: Error, req: Request, res: Response) => {
-  const response: ResponseBody = {
+  const response: ResPayload = {
     success: false,
     errors: [{ message: "Oops, we can't process this request right now." }],
   };

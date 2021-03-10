@@ -1,8 +1,6 @@
 /*
  * Created by Jimmy Lan
- * Creation Date: 2021-03-04
+ * Creation Date: 2021-03-08
  */
 
-export * from "./UserRole";
-export * from "./ResponseBody";
-export * from "./Token";
+export * from "./User";

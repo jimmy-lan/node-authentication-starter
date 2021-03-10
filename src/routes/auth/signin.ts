@@ -5,12 +5,13 @@
 
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
+
 import { validateRequest } from "../../middlewares";
-import { User } from "../../schemas";
+import { User } from "../../models";
 import { UnauthorizedError } from "../../errors";
 import { PasswordEncoder } from "../../services";
 import { signTokens } from "./helpers";
-import { ResponseBody } from "../../models";
+import { AuthResPayload } from "../../types";
 
 const router = Router();
 
@@ -24,7 +25,7 @@ router.post(
     body("password").notEmpty(),
   ],
   validateRequest,
-  async (req: Request, res: Response<ResponseBody>) => {
+  async (req: Request, res: Response<AuthResPayload>) => {
     const { email, password } = req.body;
     const invalidCredentialsMessage = "Invalid email or password.";
 
@@ -45,15 +46,15 @@ router.post(
     }
 
     const [refreshToken, bearerToken] = signTokens(existingUser);
-    const data = {
+    const payload = {
       refreshToken: refreshToken,
       bearerToken: bearerToken,
-      email: existingUser.email,
+      user: existingUser,
     };
 
     return res.json({
       success: true,
-      data,
+      payload,
     });
   }
 );

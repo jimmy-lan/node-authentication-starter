@@ -3,9 +3,9 @@
  * Creation Date: 2020-11-30
  */
 
-import { SerializedHttpError } from "../errors";
+import { SerializedHttpError } from "../../errors";
 
-export interface ResponseBody {
+export interface ResPayload {
   success: boolean;
   time?: string;
   /**
@@ -13,7 +13,7 @@ export interface ResponseBody {
    * from the server. This attribute will not be set if
    * request fails.
    */
-  data?: object;
+  payload?: object;
   /**
    * If request results in an error, success will be set
    * to false and some error message will be returned.
