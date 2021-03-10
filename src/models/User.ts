@@ -108,6 +108,7 @@ const userSchema = new Schema<UserDocument>(
     toJSON: {
       transform(doc, ret) {
         delete ret.password;
+        delete ret.clientSecret;
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
