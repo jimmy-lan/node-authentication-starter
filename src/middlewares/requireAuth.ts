@@ -9,8 +9,8 @@ import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 
 import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
-import { TokenProcessor } from "../services";
-import { UnauthorizedError } from "../errors";
+import { TokenProcessor, userRequestRateLimiter } from "../services";
+import { RateLimitedError, UnauthorizedError } from "../errors";
 import { User } from "../models";
 import { signTokens } from "../util";
 
@@ -28,7 +28,7 @@ const extractTokenFromHeader = (
   prefix?: string
 ) => {
   // Extract raw
-  const raw = req.headers[headerField];
+  const raw = req.headers[headerField.toLowerCase()];
   if (!raw || typeof raw !== "string") {
     return "";
   }
@@ -105,9 +105,9 @@ const verifyAndUseRefreshToken = async (
 
   // Assign new tokens
   const [newRefreshToken, newAccessToken] = await signTokens(user);
-  res.set("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
-  res.set("x-access-token", newAccessToken);
-  res.set("x-refresh-token", newRefreshToken);
+  res.set("Access-Control-Expose-Headers", "X-Access-Token, X-Refresh-Token");
+  res.setHeader("X-Access-Token", newAccessToken);
+  res.setHeader("X-Refresh-Token", newRefreshToken);
   return { id: user._id || user.id, role: user.role };
 };
 
@@ -116,7 +116,7 @@ export const requireAuth = async (
   res: Response<ResPayload>,
   next: NextFunction
 ) => {
-  const accessToken = extractTokenFromHeader(req, "authorization", "bearer");
+  const accessToken = extractTokenFromHeader(req, "Authorization", "bearer");
   if (!accessToken) {
     throw new UnauthorizedError();
   }
@@ -129,7 +129,7 @@ export const requireAuth = async (
     // Try refresh token
     const refreshToken = extractTokenFromHeader(
       req,
-      "x-refresh-token",
+      "X-Refresh-Token",
       "refresh"
     );
 
@@ -138,6 +138,19 @@ export const requireAuth = async (
       tokenProcessor,
       res
     );
+  }
+
+  // Request rate limiting
+  try {
+    await userRequestRateLimiter.consume(req.user.id, 1);
+  } catch (rateLimiterRes) {
+    const retryAfter = rateLimiterRes.msBeforeNext / 1000;
+    const rateLimitReset = new Date(Date.now() + retryAfter).getTime();
+    res.set("Access-Control-Expose-Headers", "Retry-After, X-RateLimit-Reset");
+    res.setHeader("Retry-After", retryAfter);
+    res.setHeader("X-RateLimit-Reset", rateLimitReset);
+
+    throw new RateLimitedError();
   }
 
   return next();
