@@ -10,9 +10,9 @@ import mongoose from "mongoose";
 
 import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
 import { TokenProcessor } from "../services";
-import { UnauthorizedError } from "../errors";
+import { RateLimitedError, UnauthorizedError } from "../errors";
 import { User } from "../models";
-import { signTokens } from "../util";
+import { isExceedTokenRateLimit, signTokens } from "../util";
 
 /**
  * Extract token string from request header.
@@ -103,8 +103,18 @@ const verifyAndUseRefreshToken = async (
     throw new UnauthorizedError();
   }
 
+  // Check for token generation rate limit
+  const isExceedLimit = await isExceedTokenRateLimit(
+    userId,
+    new Date(),
+    3 * 60 * 1000
+  );
+  if (isExceedLimit) {
+    throw new RateLimitedError();
+  }
+
   // Assign new tokens
-  const [newRefreshToken, newAccessToken] = signTokens(user);
+  const [newRefreshToken, newAccessToken] = await signTokens(user);
   res.set("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
   res.set("x-access-token", newAccessToken);
   res.set("x-refresh-token", newRefreshToken);

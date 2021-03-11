@@ -11,3 +11,4 @@ export * from "./InternalServerError";
 export * from "./NotFoundError";
 export * from "./UnauthorizedError";
 export * from "./UnprocessableEntityError";
+export * from "./RateLimitedError";

@@ -8,7 +8,7 @@ import { promisify } from "util";
 
 interface OwnRedisClient extends RedisClient {
   getAsync: (arg1: string) => Promise<string | null>;
-  setAsync: (arg1: string, arg2: string) => Promise<unknown>;
+  setAsync: Function;
 }
 
 const redisConnection = process.env.REDIS_URI!;
@@ -16,6 +16,10 @@ const redisClient = createClient(redisConnection) as OwnRedisClient;
 
 redisClient.getAsync = promisify(redisClient.get).bind(redisClient);
 redisClient.setAsync = promisify(redisClient.set).bind(redisClient);
+
+redisClient.on("ready", () => {
+  console.log("Connected to Redis.");
+});
 
 redisClient.on("error", (error) => {
   console.log(error);
