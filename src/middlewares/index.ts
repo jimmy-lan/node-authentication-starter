@@ -5,3 +5,5 @@
 
 export * from "./handleErrors";
 export * from "./validateRequest";
+export * from "./rateLimitIp";
+export * from "./requireAuth";
