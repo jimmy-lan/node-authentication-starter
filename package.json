@@ -1,10 +1,10 @@
 {
   "name": "template-node-authentication",
   "version": "1.0.0",
-  "description": "",
+  "description": "Template for node.js authentication with Mongo DB and Redis.",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "npm run build && node dist/index.js",
     "postinstall": "tsc -p .",
     "dev": "ts-node-dev src/index.ts",
     "watch-node": "nodemon dist/index.js",
