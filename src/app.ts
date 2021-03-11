@@ -13,8 +13,7 @@ import { authRouter } from "./routes";
 import { getMissingEnvVariables } from "./util";
 import { handleErrors } from "./middlewares";
 import { NotFoundError } from "./errors";
-import { requireAuth } from "./middlewares/requireAuth";
-import { rateLimitIp } from "./middlewares/rateLimitIp";
+import { requireAuth, rateLimitIp } from "./middlewares";
 
 const app = express();
 
