@@ -10,8 +10,8 @@ import { validateRequest } from "../../middlewares";
 import { User } from "../../models";
 import { UnauthorizedError } from "../../errors";
 import { PasswordEncoder } from "../../services";
-import { signTokens } from "./helpers";
 import { AuthResPayload } from "../../types";
+import { signTokens } from "../../util";
 
 const router = Router();
 

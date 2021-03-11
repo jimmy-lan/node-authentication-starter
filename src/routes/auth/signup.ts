@@ -11,7 +11,7 @@ import { User } from "../../models";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
 import { PasswordEncoder } from "../../services";
-import { signTokens } from "./helpers";
+import { signTokens } from "../../util";
 
 const router = Router();
 

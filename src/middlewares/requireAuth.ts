@@ -11,8 +11,8 @@ import mongoose from "mongoose";
 import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
 import { TokenProcessor } from "../services";
 import { UnauthorizedError } from "../errors";
-import { signTokens } from "../routes/auth/helpers";
 import { User } from "../models";
+import { signTokens } from "../util";
 
 /**
  * Extract token string from request header.
