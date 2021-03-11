@@ -14,6 +14,7 @@ import { getMissingEnvVariables } from "./util";
 import { handleErrors } from "./middlewares";
 import { NotFoundError } from "./errors";
 import { requireAuth } from "./middlewares/requireAuth";
+import { rateLimitIp } from "./middlewares/rateLimitIp";
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use(
     },
   })
 );
+app.use(rateLimitIp);
 
 // Register routers
 app.use("/api/v1/users", authRouter);
