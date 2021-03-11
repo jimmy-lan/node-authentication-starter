@@ -12,7 +12,7 @@ import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
 import { TokenProcessor, userRequestRateLimiter } from "../services";
 import { RateLimitedError, UnauthorizedError } from "../errors";
 import { User } from "../models";
-import { signTokens } from "../util";
+import { setRateLimitErrorHeaders, signTokens } from "../util";
 
 /**
  * Extract token string from request header.
@@ -144,12 +144,7 @@ export const requireAuth = async (
   try {
     await userRequestRateLimiter.consume(req.user.id, 1);
   } catch (rateLimiterRes) {
-    const retryAfter = rateLimiterRes.msBeforeNext / 1000;
-    const rateLimitReset = new Date(Date.now() + retryAfter).getTime();
-    res.set("Access-Control-Expose-Headers", "Retry-After, X-RateLimit-Reset");
-    res.setHeader("Retry-After", retryAfter);
-    res.setHeader("X-RateLimit-Reset", rateLimitReset);
-
+    setRateLimitErrorHeaders(res, rateLimiterRes);
     throw new RateLimitedError();
   }
 

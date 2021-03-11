@@ -4,6 +4,7 @@
  */
 
 export * from "./tokens";
+export * from "./rateLimit";
 
 /**
  * Get a list of environment variables in `variables` that are missing.
