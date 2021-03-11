@@ -17,8 +17,7 @@ import { UserRole } from "../types";
 export interface UserProps {
   email: string;
   password: string;
-  // A unique chunk of string used to generate refresh token for
-  // clients
+  /** Part of key used to generate refresh token, unique for each client */
   clientSecret: string;
   role: UserRole;
 
@@ -38,8 +37,7 @@ export interface UserProps {
 export type UserDocument = Document<UserProps> & {
   email: string;
   password: string;
-  // A unique chunk of string used to generate refresh token for
-  // clients
+  /** Part of key used to generate refresh token, unique for each client */
   clientSecret: string;
   role: UserRole;
 

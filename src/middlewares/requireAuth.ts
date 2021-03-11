@@ -6,6 +6,8 @@
  */
 
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
+
 import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
 import { TokenProcessor } from "../services";
 import { UnauthorizedError } from "../errors";
@@ -50,6 +52,65 @@ declare global {
   }
 }
 
+const verifyAccessToken = (
+  accessToken: string,
+  tokenProcessor: TokenProcessor
+) => {
+  const accessSecret = process.env.ACCESS_SECRET!;
+  const { sub, data } = tokenProcessor.verifyToken<AccessTokenPayload>(
+    accessToken,
+    accessSecret
+  );
+  return { ...sub, ...data };
+};
+
+const verifyAndUseRefreshToken = async (
+  refreshToken: string,
+  tokenProcessor: TokenProcessor,
+  res: Response
+) => {
+  // Get claimed user id
+  const claims = tokenProcessor.decodeToken(refreshToken);
+  if (!claims?.sub || !mongoose.isValidObjectId(claims.sub)) {
+    throw new UnauthorizedError();
+  }
+  const userId = claims.sub;
+
+  // Get user information
+  const user = await User.findById(userId).lean();
+  if (!user) {
+    throw new UnauthorizedError();
+  }
+
+  // Verify refresh token
+  const clientSecret = user.clientSecret;
+  const refreshSecret = process.env.REFRESH_SECRET! + clientSecret;
+
+  /*
+   * The idea for this extra `try-catch` block is to throw the appropriate error
+   *   so that the user gets a correct error response.
+   * The user is more likely to be unauthorized if the token verification process fails.
+   * If we do not catch the verification error, the handler middleware will default to
+   *   a response with 500 error status.
+   * Please see error handler middleware inside of the `middlewares` folder.
+   */
+  try {
+    tokenProcessor.verifyToken<RefreshTokenPayload>(
+      refreshToken,
+      refreshSecret
+    );
+  } catch (error) {
+    throw new UnauthorizedError();
+  }
+
+  // Assign new tokens
+  const [newRefreshToken, newAccessToken] = signTokens(user);
+  res.set("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
+  res.set("x-access-token", newAccessToken);
+  res.set("x-refresh-token", newRefreshToken);
+  return { id: user._id || user.id, role: user.role };
+};
+
 export const requireAuth = async (
   req: Request,
   res: Response<ResPayload>,
@@ -60,16 +121,11 @@ export const requireAuth = async (
     throw new UnauthorizedError();
   }
 
-  const tokenProcessor = new TokenProcessor("RS512");
+  const tokenProcessor = new TokenProcessor("HS512");
   try {
-    const accessSecret = process.env.ACCESS_SECRET!;
-    const { sub, data } = tokenProcessor.verifyToken<AccessTokenPayload>(
-      accessToken,
-      accessSecret
-    );
-    req.user = { ...sub, ...data };
+    req.user = verifyAccessToken(accessToken, tokenProcessor);
   } catch (error) {
-    console.log("Access token expired or not working. Issuing refresh token.");
+    console.info("Access token not working or expired.");
     // Try refresh token
     const refreshToken = extractTokenFromHeader(
       req,
@@ -77,32 +133,11 @@ export const requireAuth = async (
       "refresh"
     );
 
-    const claims = tokenProcessor.decodeToken(refreshToken);
-    if (!claims?.sub) {
-      throw new UnauthorizedError();
-    }
-    const userId = claims.sub;
-
-    // Get user information
-    const user = await User.findById(userId).lean();
-    if (!user) {
-      throw new UnauthorizedError();
-    }
-
-    // Verify refresh token
-    const clientSecret = user.clientSecret;
-    const refreshSecret = process.env.REFRESH_SECRET! + clientSecret;
-    tokenProcessor.verifyToken<RefreshTokenPayload>(
+    req.user = await verifyAndUseRefreshToken(
       refreshToken,
-      refreshSecret
+      tokenProcessor,
+      res
     );
-
-    // Assign new tokens
-    const [newRefreshToken, newAccessToken] = signTokens(user);
-    res.set("Access-Control-Expose-Headers", "x-access-token, x-refresh-token");
-    res.set("x-access-token", newAccessToken);
-    res.set("x-refresh-token", newRefreshToken);
-    req.user = { id: user._id || user.id, role: user.role };
   }
 
   return next();

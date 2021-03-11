@@ -75,6 +75,7 @@ export class TokenProcessor {
     const clockTolerance = 1;
     try {
       payload = jwt.verify(token, secret, {
+        algorithms: [this.algorithm],
         clockTolerance,
         ...options,
       }) as T;
