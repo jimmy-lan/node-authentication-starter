@@ -61,6 +61,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.18",
     "morgan": "^1.10.0",
+    "rate-limiter-flexible": "^2.2.1",
     "redis": "^3.0.2"
   }
 }

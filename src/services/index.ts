@@ -6,3 +6,4 @@
 export * from "./PasswordEncoder";
 export * from "./TokenProcessor";
 export * from "./redisClient";
+export * from "./rateLimiters";

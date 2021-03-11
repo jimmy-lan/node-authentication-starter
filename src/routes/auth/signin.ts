@@ -8,10 +8,10 @@ import { body } from "express-validator";
 
 import { validateRequest } from "../../middlewares";
 import { User } from "../../models";
-import { RateLimitedError, UnauthorizedError } from "../../errors";
+import { UnauthorizedError } from "../../errors";
 import { PasswordEncoder } from "../../services";
 import { AuthResPayload } from "../../types";
-import { isExceedTokenRateLimit, signTokens } from "../../util";
+import { signTokens } from "../../util";
 
 const router = Router();
 
@@ -43,17 +43,6 @@ router.post(
     );
     if (!isMatch) {
       throw new UnauthorizedError(invalidCredentialsMessage);
-    }
-
-    // Check for token generation rate limit
-    const userId = existingUser._id || existingUser.id;
-    const isExceedLimit = await isExceedTokenRateLimit(
-      userId,
-      new Date(),
-      3 * 60 * 1000
-    );
-    if (isExceedLimit) {
-      throw new RateLimitedError();
     }
 
     const [refreshToken, accessToken] = await signTokens(existingUser);
