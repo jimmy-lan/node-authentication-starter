@@ -6,9 +6,11 @@
 import { config } from "dotenv";
 import errorhandler from "errorhandler";
 
-// Remove this line if env variables are not loaded from
+// Remove the following if env variables are not loaded from
 // dotenv files.
-config();
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+  config();
+}
 
 import "./devsupport/console";
 import { app } from "./app";

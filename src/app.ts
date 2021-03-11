@@ -18,7 +18,12 @@ import { requireAuth } from "./middlewares/requireAuth";
 const app = express();
 
 // Check for missing environment variables
-const requiredVariables = ["DB_URI", "ACCESS_SECRET", "REFRESH_SECRET"];
+const requiredVariables = [
+  "DB_URI",
+  "ACCESS_SECRET",
+  "REFRESH_SECRET",
+  "REDIS_URI",
+];
 const missingVariables = getMissingEnvVariables(requiredVariables);
 
 if (missingVariables.length) {
@@ -29,7 +34,7 @@ if (missingVariables.length) {
   process.exit(1);
 }
 
-// Connect to DB
+// Connect to Mongo DB
 mongoose
   .connect(process.env.DB_URI!, {
     useNewUrlParser: true,
