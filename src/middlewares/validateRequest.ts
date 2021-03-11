@@ -22,7 +22,9 @@ export const validateRequest = (
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
-    throw new RequestValidationError(validationErrors.array());
+    throw new RequestValidationError(
+      validationErrors.array({ onlyFirstError: true })
+    );
   }
 
   next();

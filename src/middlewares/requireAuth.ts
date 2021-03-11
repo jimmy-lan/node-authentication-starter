@@ -32,7 +32,10 @@ const extractTokenFromHeader = (
   }
 
   // Check prefix
-  if (prefix && raw.slice(0, prefix.length) !== prefix) {
+  if (
+    prefix &&
+    raw.slice(0, prefix.length).toLowerCase() !== prefix.toLowerCase()
+  ) {
     return "";
   }
   return raw.slice(prefix?.length).trim();
@@ -66,6 +69,7 @@ export const requireAuth = async (
     );
     req.user = { ...sub, ...data };
   } catch (error) {
+    console.log("Access token expired or not working. Issuing refresh token.");
     // Try refresh token
     const refreshToken = extractTokenFromHeader(
       req,

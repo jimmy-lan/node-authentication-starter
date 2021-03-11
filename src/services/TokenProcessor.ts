@@ -29,22 +29,30 @@ export class TokenProcessor {
     tokenType: TokenType,
     options?: SignOptions
   ) {
+    if (!payload.iat) {
+      payload.iat = new Date().getTime();
+    }
+
     switch (tokenType) {
-      case TokenType.refresh:
-        // Set 5 minute expiration time for refresh tokens
+      case TokenType.access:
+        // Set 5 minute expiration time for access tokens
         payload.exp = payload.iat + 5 * 60 * 1000;
+        // payload.exp = payload.iat + 5 * 60 * 1000;
         break;
       case TokenType.reset:
         // Set 10 minute expiration time for password reset
         payload.exp = payload.iat + 10 * 60 * 1000;
         break;
-      case TokenType.access:
-        // Set 7 day expiration time for access tokens
+      case TokenType.refresh:
+        // Set 7 day expiration time for refresh tokens
         payload.exp = payload.iat + 7 * 24 * 60 * 1000;
         break;
     }
 
-    return jwt.sign(payload, secret, { algorithm: this.algorithm, ...options });
+    return jwt.sign(payload, secret, {
+      algorithm: this.algorithm,
+      ...options,
+    });
   }
 
   decodeToken(token: string) {
@@ -64,16 +72,28 @@ export class TokenProcessor {
     options?: VerifyOptions
   ) {
     let payload: T;
+    const clockTolerance = 1;
     try {
       payload = jwt.verify(token, secret, {
-        algorithms: [this.algorithm],
-        clockTolerance: 1,
+        clockTolerance,
         ...options,
       }) as T;
     } catch (error) {
       console.log(error);
       throw new UnauthorizedError("Invalid token");
     }
+
+    // Manual check for JSON expiration
+    // Added because jwt.verify seem to have a bug in checking token expiration
+    if (payload.exp) {
+      const expireDate = new Date(payload.exp);
+      const currentTime = new Date().getTime() - clockTolerance * 1000;
+      if (expireDate < new Date(currentTime)) {
+        // Token expired
+        throw new UnauthorizedError("Token expired");
+      }
+    }
+
     return payload;
   }
 }

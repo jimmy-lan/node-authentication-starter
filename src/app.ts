@@ -13,6 +13,7 @@ import { authRouter } from "./routes";
 import { getMissingEnvVariables } from "./util";
 import { handleErrors } from "./middlewares";
 import { NotFoundError } from "./errors";
+import { requireAuth } from "./middlewares/requireAuth";
 
 const app = express();
 
@@ -60,6 +61,9 @@ app.use(
 
 // Register routers
 app.use("/api/v1/users", authRouter);
+app.use("/api/v1/test", requireAuth, (req, res) => {
+  return res.json({ success: true, data: "hi" });
+});
 
 // Resource not found
 app.all("*", () => {
