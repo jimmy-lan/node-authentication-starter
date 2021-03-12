@@ -104,7 +104,7 @@ const verifyAndUseRefreshToken = async (
   }
 
   // Assign new tokens
-  const [newRefreshToken, newAccessToken] = await signTokens(user);
+  const [newRefreshToken, newAccessToken] = await signTokens(user, true, res);
   res.set("Access-Control-Expose-Headers", "X-Access-Token, X-Refresh-Token");
   res.setHeader("X-Access-Token", newAccessToken);
   res.setHeader("X-Refresh-Token", newRefreshToken);

@@ -45,7 +45,11 @@ router.post(
       throw new UnauthorizedError(invalidCredentialsMessage);
     }
 
-    const [refreshToken, accessToken] = await signTokens(existingUser);
+    const [refreshToken, accessToken] = await signTokens(
+      existingUser,
+      true,
+      res
+    );
     const payload = {
       refreshToken: refreshToken,
       accessToken: accessToken,

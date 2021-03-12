@@ -12,18 +12,22 @@ import {
 } from "../services";
 import { AccessTokenPayload, RefreshTokenPayload } from "../types";
 import { RateLimitedError } from "../errors";
+import { setRateLimitErrorHeaders } from "./rateLimit";
+import { Response } from "express";
 
 /**
  * Sign refresh and access tokens for `user`.
  * @param user User document referring to the subject.
- * @param noRefreshRecord If true, this sign token action will not be re-
+ * @param refreshRecord If false, this sign token action will not be re-
  *   corded in Redis for rate-limiting purpose.
+ * @param res Response object to set rate limit error headers.
  * @return An array of strings where the first item is the refresh token,
  *   and the second item is the access token.
  */
 export const signTokens = async (
   user: UserDocument | LeanDocument<UserDocument>,
-  noRefreshRecord: boolean = false
+  refreshRecord: boolean = true,
+  res?: Response
 ) => {
   const tokenProcessor = new TokenProcessor("HS512");
   const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
@@ -48,10 +52,13 @@ export const signTokens = async (
     TokenType.access
   );
 
-  if (!noRefreshRecord) {
+  if (refreshRecord) {
     try {
       await tokenRefreshRateLimiter.consume(userId, 1);
-    } catch (error) {
+    } catch (rateLimiterRes) {
+      if (res) {
+        setRateLimitErrorHeaders(res, rateLimiterRes);
+      }
       throw new RateLimitedError();
     }
   }
