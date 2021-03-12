@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "npm run build && node dist/index.js",
-    "postinstall": "tsc -p .",
+    "postinstall": "npm run build",
     "dev": "ts-node-dev src/index.ts",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
