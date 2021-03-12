@@ -49,7 +49,7 @@ Please look at `package.json` for other available scripts.
 
 ## Configuration
 
-### Variable definition
+### Environment variables
 
 A `.env.example` file is provided under the **root directory** to show example environment variables.
 
