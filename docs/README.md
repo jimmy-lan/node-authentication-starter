@@ -66,3 +66,4 @@ In development mode, I recommend the use of `dotenv` package.
 This template has `dotenv` installed as a development dependency, and variables will be drawn from the `.env` file under **development** mode.
 
 A recommended approach to set up the environment variables is to copy the file `.env.example` and rename the copy `.env`, then start changing the values inside the file based on your project needs.
+
