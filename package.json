@@ -11,7 +11,8 @@
     "watch-ts": "tsc -w",
     "build": "tsc -p .",
     "lint": "tsc -p . --noEmit && eslint \\\"**/*.{js,ts}\\\" --quiet --fix",
-    "test": "jest --forceExit --coverage --verbose"
+    "test": "jest --forceExit --coverage --verbose",
+    "doc": "./scripts/open-browser.sh http://localhost:3000 && docsify serve docs/"
   },
   "jest": {
     "preset": "ts-jest",
@@ -42,6 +43,8 @@
     "@types/util.promisify": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
+    "@types/jsonwebtoken": "^8.5.0",
+    "docsify-cli": "^4.4.2",
     "dotenv": "^8.2.0",
     "errorhandler": "^1.5.1",
     "eslint": "^7.21.0",
@@ -54,7 +57,6 @@
     "typescript": "^4.2.2"
   },
   "dependencies": {
-    "@types/jsonwebtoken": "^8.5.0",
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
