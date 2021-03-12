@@ -17,7 +17,14 @@ It is initially meant to serve as a starting point for personal and enterprise [
 
 ## Onboard this Project
 
+Are you reading this page on GitHub? Consider viewing the documentation from a website for better experience.
+Clone this repository and run ```npm run doc``` to read the documentation locally on your machine.
+Alternatively, you can use the following link: https://lanyanxiang.github.io/template-node-authentication/.
 
+If you don't find the set-up process intuitive enough, please have a look at this [setup guide](./onboard/setup.md).
+Joining or extending a project may be a challenging experience for some.
+That's why I aim to provide a good documentation so that you can get up to speed regardless of your prior experience.
+Please read some more documentation pages in the `onboard` folder in case of need.
 
 ## Commands
 
