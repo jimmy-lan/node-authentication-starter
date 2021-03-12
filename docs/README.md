@@ -77,6 +77,17 @@ Close to the top of the file `src/app.ts`, you will observe an array with the na
 This array lists the names of the environment variables that the server depends on.
 An error will be thrown, causing the process to halt if one or more of these variables are not defined.
 
+For example,
+
+```
+> template-node-authentication@1.0.0 dev
+> ts-node-dev src/index.ts
+
+[INFO] 17:24:09 ts-node-dev ver. 1.1.6 (using ts-node ver. 9.1.1, typescript ver. 4.2.2)
+17:24:14 [Server] Missing environment Variables: DB_URI, ACCESS_SECRET, REFRESH_SECRET, REDIS_URI
+17:24:14 [Server] Process exiting.
+```
+
 ### dotenv
 
 In development mode, I recommend the use of `dotenv` package.
