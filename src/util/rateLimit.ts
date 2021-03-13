@@ -6,6 +6,14 @@
 import { Response } from "express";
 import { IRateLimiterRes } from "rate-limiter-flexible";
 
+/**
+ * Extract information from a RateLimiterRes object
+ * and set the appropriate response headers.
+ * Please only call this function when the rate limit
+ * is exceeding (i.e., an error is thrown by the limiter).
+ * @param res Response instance provided by express
+ * @param rateLimiterRes Rate limiter result
+ */
 export const setRateLimitErrorHeaders = (
   res: Response,
   rateLimiterRes: IRateLimiterRes
