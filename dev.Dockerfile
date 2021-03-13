@@ -6,10 +6,13 @@ FROM node:alpine
 WORKDIR /app
 # COPY .npmrc .
 COPY package.json .
-# RUN npm install --only=production
-RUN npm install
+COPY package-lock.json .
+# RUN npm ci --only=production
+RUN npm ci
 # RUN rm -f .npmrc
 
 COPY . .
+
+RUN npm run build
 
 CMD ["npm", "start"]

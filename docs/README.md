@@ -77,7 +77,7 @@ Close to the top of the file `src/app.ts`, you will observe an array with the na
 This array lists the names of the environment variables that the server depends on.
 An error will be thrown, causing the process to halt if one or more of these variables are not defined.
 
-For example,
+**For example,**
 
 ```
 > template-node-authentication@1.0.0 dev
@@ -94,4 +94,3 @@ In development mode, I recommend the use of `dotenv` package.
 This template has `dotenv` installed as a development dependency, and variables will be drawn from the `.env` file under **development** mode.
 
 A recommended approach to set up the environment variables is to copy the file `.env.example` and rename the copy `.env`, then start changing the values inside the file based on your project needs.
-
