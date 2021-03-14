@@ -118,6 +118,6 @@ export const passwordResetRateLimiter = new RateLimiterRedis({
 export const authBruteIPRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "auth_brute_ip",
-  points: 50,
+  points: 30,
   duration: 24 * 60 * 60,
 });

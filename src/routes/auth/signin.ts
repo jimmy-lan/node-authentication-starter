@@ -8,10 +8,14 @@ import { body } from "express-validator";
 
 import { validateRequest } from "../../middlewares";
 import { User } from "../../models";
-import { UnauthorizedError } from "../../errors";
-import { PasswordEncoder } from "../../services";
+import { RateLimitedError, UnauthorizedError } from "../../errors";
+import {
+  authBruteIPRateLimiter,
+  PasswordEncoder,
+  signInRateLimiter,
+} from "../../services";
 import { AuthResPayload } from "../../types";
-import { signTokens } from "../../util";
+import { setRateLimitErrorHeaders, signTokens } from "../../util";
 
 const router = Router();
 
@@ -26,8 +30,22 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response<AuthResPayload>) => {
+    const ip = req.ip;
     const { email, password } = req.body;
+    const emailIpPair = `${email}${ip}`;
     const invalidCredentialsMessage = "Invalid email or password.";
+
+    // Rate limiting
+    try {
+      await signInRateLimiter.consume(emailIpPair);
+      await authBruteIPRateLimiter.consume(ip);
+    } catch (rateLimiterRes) {
+      if (rateLimiterRes instanceof Error) {
+        throw rateLimiterRes;
+      }
+      setRateLimitErrorHeaders(res, rateLimiterRes);
+      throw new RateLimitedError();
+    }
 
     // Find user
     const existingUser = await User.findOne({ email });
@@ -44,6 +62,10 @@ router.post(
     if (!isMatch) {
       throw new UnauthorizedError(invalidCredentialsMessage);
     }
+
+    // Clear rate limit
+    await signInRateLimiter.delete(emailIpPair);
+    await authBruteIPRateLimiter.delete(ip);
 
     const [refreshToken, accessToken] = await signTokens(
       existingUser,
