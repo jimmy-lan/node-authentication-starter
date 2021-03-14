@@ -11,9 +11,14 @@ import { emailSenders } from "./email";
  * of any link.
  */
 export interface ResetPasswordConfig {
+  /** Email address to send emails for reset password requests. */
   emailSender: string;
+  /** Root url for password reset. Token will be appended to this link.
+   * Please **DO NOT** add any trialing slashes ("/") at the end. */
   passwordResetLink: string;
+  /** Sendgrid template id for password reset request email. */
   requestEmailTemplateId: string;
+  /** Sendgrid template id for password reset confirmation email. */
   confirmationEmailTemplateId: string;
 }
 
