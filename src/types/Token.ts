@@ -18,3 +18,7 @@ export interface AccessTokenPayload extends TokenPayload {
 export interface RefreshTokenPayload extends TokenPayload {
   sub: string;
 }
+
+export interface ResetTokenPayload extends TokenPayload {
+  sub: string;
+}

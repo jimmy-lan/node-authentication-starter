@@ -15,7 +15,7 @@ export enum TokenType {
 
 export interface TokenPayload {
   sub: string | Object;
-  iat: number;
+  iat?: number;
   exp?: number;
   data?: Object;
 }
@@ -33,20 +33,22 @@ export class TokenProcessor {
       payload.iat = new Date().getTime();
     }
 
-    switch (tokenType) {
-      case TokenType.access:
-        // Set 5 minute expiration time for access tokens
-        payload.exp = payload.iat + 5 * 60 * 1000;
-        // payload.exp = payload.iat + 5 * 60 * 1000;
-        break;
-      case TokenType.reset:
-        // Set 10 minute expiration time for password reset
-        payload.exp = payload.iat + 10 * 60 * 1000;
-        break;
-      case TokenType.refresh:
-        // Set 7 day expiration time for refresh tokens
-        payload.exp = payload.iat + 7 * 24 * 60 * 1000;
-        break;
+    if (!payload.exp) {
+      switch (tokenType) {
+        case TokenType.access:
+          // Set 5 minute expiration time for access tokens
+          payload.exp = payload.iat + 5 * 60 * 1000;
+          // payload.exp = payload.iat + 5 * 60 * 1000;
+          break;
+        case TokenType.reset:
+          // Set 10 minute expiration time for password reset
+          payload.exp = payload.iat + 10 * 60 * 1000;
+          break;
+        case TokenType.refresh:
+          // Set 7 day expiration time for refresh tokens
+          payload.exp = payload.iat + 7 * 24 * 60 * 1000;
+          break;
+      }
     }
 
     return jwt.sign(payload, secret, {
