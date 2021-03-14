@@ -4,6 +4,7 @@
  */
 import { BurstyRateLimiter, RateLimiterRedis } from "rate-limiter-flexible";
 import { redisClient } from "./redisClient";
+import { rateLimitConfig } from "../config";
 
 /* ************************************************
  * * Refresh token and sign in use rate limiter
@@ -12,8 +13,8 @@ import { redisClient } from "./redisClient";
 export const tokenRefreshRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "refresh",
-  points: 3, // 3 token refresh requests
-  duration: 5 * 60, // 5 minutes by user
+  points: rateLimitConfig.tokenRefresh.normal.points,
+  duration: rateLimitConfig.tokenRefresh.normal.duration,
 });
 
 /* ************************************************
@@ -24,16 +25,16 @@ export const tokenRefreshRateLimiter = new RateLimiterRedis({
 const userRequestRateLimiterNormal = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "user_request",
-  points: 15,
-  duration: 30,
+  points: rateLimitConfig.userRequest.normal.points,
+  duration: rateLimitConfig.userRequest.normal.duration,
 });
 
 // In a 5-minute interval, users can burst 10 requests
 const userRequestRateLimiterBurst = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "user_request_burst",
-  points: 10,
-  duration: 5 * 60,
+  points: rateLimitConfig.userRequest.burst.points,
+  duration: rateLimitConfig.userRequest.burst.duration,
 });
 
 export const userRequestRateLimiter = new BurstyRateLimiter(
@@ -48,15 +49,15 @@ export const userRequestRateLimiter = new BurstyRateLimiter(
 const ipRateLimiterNormal = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "ip",
-  points: 20,
-  duration: 35,
+  points: rateLimitConfig.ip.normal.points,
+  duration: rateLimitConfig.ip.normal.duration,
 });
 
 const ipRateLimiterBurst = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "ip_burst",
-  points: 10,
-  duration: 3 * 60,
+  points: rateLimitConfig.ip.burst.points,
+  duration: rateLimitConfig.ip.burst.duration,
 });
 
 export const ipRateLimiter = new BurstyRateLimiter(
@@ -80,17 +81,17 @@ export const ipRateLimiter = new BurstyRateLimiter(
 export const signInRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "auth_brute_ip_and_email",
-  points: 6,
-  duration: 30 * 24 * 60 * 60, // Store failed records for 1 month
-  blockDuration: 2 * 60 * 60, // Block for 2 hours after 6 failed attempts
+  points: rateLimitConfig.signIn.normal.points,
+  duration: rateLimitConfig.signIn.normal.duration,
+  blockDuration: rateLimitConfig.signIn.normal.blockDuration,
 });
 
 export const passwordResetRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "password_reset",
-  points: 1,
-  duration: 2 * 60,
-  blockDuration: 2 * 60, // This attribute helps determine msBeforeNext
+  points: rateLimitConfig.passwordReset.normal.points,
+  duration: rateLimitConfig.passwordReset.normal.duration,
+  blockDuration: rateLimitConfig.passwordReset.normal.blockDuration,
 });
 
 /* ************************************************
@@ -118,6 +119,6 @@ export const passwordResetRateLimiter = new RateLimiterRedis({
 export const authBruteIPRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "auth_brute_ip",
-  points: 30,
-  duration: 24 * 60 * 60,
+  points: rateLimitConfig.authBruteForceIP.normal.points,
+  duration: rateLimitConfig.authBruteForceIP.normal.duration,
 });
