@@ -86,8 +86,8 @@ const sendPasswordResetEmail = async (
   try {
     await new TemplateEmailSender()
       .setRecipient(user.email)
-      .setFrom("account@thepolyteam.com")
-      .setTemplateId("d-9c30543786c5498c9281c32e8d552683")
+      .setFrom(resetPasswordConfig.emailSender)
+      .setTemplateId(resetPasswordConfig.requestEmailTemplateId)
       .setDynamicTemplateData({
         subject: "Your Password Reset Request",
         name,
@@ -109,8 +109,8 @@ const sendPasswordResetConfirmationEmail = async (
   try {
     await new TemplateEmailSender()
       .setRecipient(user.email)
-      .setFrom("account@thepolyteam.com")
-      .setTemplateId("d-c7534e35a1f5472d957df1a4b6120d1a")
+      .setFrom(resetPasswordConfig.emailSender)
+      .setTemplateId(resetPasswordConfig.confirmationEmailTemplateId)
       .setDynamicTemplateData({
         subject: "Password Reset Confirmation",
         name,
