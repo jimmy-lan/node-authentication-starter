@@ -90,6 +90,7 @@ export const passwordResetRateLimiter = new RateLimiterRedis({
   keyPrefix: "password_reset",
   points: 1,
   duration: 2 * 60,
+  blockDuration: 2 * 60, // This attribute helps determine msBeforeNext
 });
 
 /* ************************************************
@@ -117,6 +118,6 @@ export const passwordResetRateLimiter = new RateLimiterRedis({
 export const authBruteIPRateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "auth_brute_ip",
-  points: 30,
+  points: 50,
   duration: 24 * 60 * 60,
 });
