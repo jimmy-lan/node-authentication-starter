@@ -23,6 +23,7 @@ const requiredVariables = [
   "ACCESS_SECRET",
   "REFRESH_SECRET",
   "REDIS_URI",
+  "SENDGRID_KEY",
 ];
 const missingVariables = getMissingEnvVariables(requiredVariables);
 
