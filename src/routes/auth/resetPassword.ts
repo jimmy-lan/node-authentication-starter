@@ -11,6 +11,7 @@ import { validateRequest } from "../../middlewares";
 import {
   authBruteIPRateLimiter,
   passwordResetRateLimiter,
+  signInRateLimiter,
   TokenProcessor,
   TokenType,
 } from "../../services";
@@ -172,8 +173,16 @@ router.post(
 
     verifyPasswordResetToken(token, user.clientSecret);
 
+    // Reset password
     user.password = newPassword;
     await user.save();
+
+    // Clear rate limiter
+    const ip = req.ip;
+    const emailIpPair = `${user.email}${ip}`;
+    await authBruteIPRateLimiter.delete(ip);
+    await signInRateLimiter.delete(emailIpPair);
+    await passwordResetRateLimiter.delete(emailIpPair);
 
     await sendPasswordResetConfirmationEmail(user);
 
