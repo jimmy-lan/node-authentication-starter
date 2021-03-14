@@ -6,8 +6,9 @@
  *    and verification process.
  */
 
-import { TokenType } from "../services";
 import { Algorithm } from "jsonwebtoken";
+
+import { TokenType } from "../services";
 
 export interface TokenConfig {
   clientSecretLength: number;
