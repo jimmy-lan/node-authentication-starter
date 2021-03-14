@@ -5,4 +5,4 @@
 
 export * from "./rateLimit";
 export * from "./token";
-export * from "./links";
+export * from "./resetPassword";
