@@ -42,7 +42,8 @@ const checkRateLimit = async (req: Request, res: Response) => {
 const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
   const tokenProcessor = new TokenProcessor("HS256");
   const userId = user._id || user.id;
-  const resetSecret = process.env.RESET_SECRET!;
+  const clientSecret = user.clientSecret;
+  const resetSecret = process.env.RESET_SECRET! + clientSecret;
   return tokenProcessor.issueToken<ResetTokenPayload>(
     { sub: userId },
     resetSecret,
@@ -50,9 +51,14 @@ const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
   );
 };
 
-const verifyPasswordResetToken = (token: string) => {
+const decodePasswordResetToken = (token: string) => {
   const tokenProcessor = new TokenProcessor("HS256");
-  const resetSecret = process.env.RESET_SECRET!;
+  return tokenProcessor.decodeToken(token);
+};
+
+const verifyPasswordResetToken = (token: string, clientSecret: string) => {
+  const tokenProcessor = new TokenProcessor("HS256");
+  const resetSecret = process.env.RESET_SECRET! + clientSecret;
   return tokenProcessor.verifyToken<ResetTokenPayload>(token, resetSecret);
 };
 
@@ -152,13 +158,19 @@ router.post(
     const { token } = req.params;
     const { newPassword } = req.body;
 
-    const { sub: userId } = verifyPasswordResetToken(token);
+    const claims = decodePasswordResetToken(token);
+    const userId = claims?.sub;
+    if (!userId) {
+      throw new NotFoundError();
+    }
 
     // Find user
     const user = await User.findById(userId);
     if (!user) {
-      throw new NotFoundError("Subject not found.");
+      throw new NotFoundError();
     }
+
+    verifyPasswordResetToken(token, user.clientSecret);
 
     user.password = newPassword;
     await user.save();
