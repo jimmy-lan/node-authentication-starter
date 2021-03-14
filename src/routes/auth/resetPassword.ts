@@ -40,6 +40,17 @@ const checkRateLimit = async (req: Request, res: Response) => {
   }
 };
 
+const clearRateLimit = async (
+  req: Request,
+  user: LeanDocument<UserDocument>
+) => {
+  const ip = req.ip;
+  const emailIpPair = `${user.email}${ip}`;
+  await authBruteIPRateLimiter.delete(ip);
+  await signInRateLimiter.delete(emailIpPair);
+  await passwordResetRateLimiter.delete(emailIpPair);
+};
+
 const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
   const tokenProcessor = new TokenProcessor("HS256");
   const userId = user._id || user.id;
@@ -178,11 +189,7 @@ router.post(
     await user.save();
 
     // Clear rate limiter
-    const ip = req.ip;
-    const emailIpPair = `${user.email}${ip}`;
-    await authBruteIPRateLimiter.delete(ip);
-    await signInRateLimiter.delete(emailIpPair);
-    await passwordResetRateLimiter.delete(emailIpPair);
+    await clearRateLimit(req, user);
 
     await sendPasswordResetConfirmationEmail(user);
 
