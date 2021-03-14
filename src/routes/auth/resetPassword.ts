@@ -6,7 +6,7 @@
 import { Request, Response, Router } from "express";
 
 import { ResetTokenPayload, ResPayload } from "../../types";
-import { body, query } from "express-validator";
+import { body, param } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import {
   authBruteIPRateLimiter,
@@ -15,7 +15,7 @@ import {
   TokenType,
 } from "../../services";
 import { setRateLimitErrorHeaders } from "../../util";
-import { RateLimitedError } from "../../errors";
+import { NotFoundError, RateLimitedError } from "../../errors";
 import { User, UserDocument } from "../../models";
 import { LeanDocument } from "mongoose";
 import { TemplateEmailSender } from "../../services/EmailSender";
@@ -89,7 +89,7 @@ const sendPasswordResetConfirmationEmail = async (
 
   try {
     await new TemplateEmailSender()
-      .setRecipient(user.id)
+      .setRecipient(user.email)
       .setFrom("account@thepolyteam.com")
       .setTemplateId("d-c7534e35a1f5472d957df1a4b6120d1a")
       .setDynamicTemplateData({
@@ -144,13 +144,28 @@ router.post(
 router.post(
   "/reset-password/:token",
   [
-    query("token").isLength({ min: 10 }),
+    param("token").notEmpty().isLength({ min: 10 }),
     body("newPassword").isLength({ min: 6, max: 50 }),
   ],
   validateRequest,
-  (req: Request, res: Response<ResPayload>) => {
-    const { token } = req.query;
+  async (req: Request, res: Response<ResPayload>) => {
+    const { token } = req.params;
     const { newPassword } = req.body;
+
+    const { sub: userId } = verifyPasswordResetToken(token);
+
+    // Find user
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new NotFoundError("Subject not found.");
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    await sendPasswordResetConfirmationEmail(user);
+
+    return res.json({ success: true });
   }
 );
 
