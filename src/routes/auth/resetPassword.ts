@@ -31,23 +31,17 @@ router.post(
     const { email } = req.body;
     const emailIPKey = `${email}${ip}`;
 
-    const [resEmailAndIP, resIP] = await Promise.all([
-      authBruteIPRateLimiter.get(ip),
-      passwordResetRateLimiter.get(emailIPKey),
-    ]);
-
-    let exceedRateLimiterRes;
-    // The block time for single IP is higher than email + ip pair
-    // Therefore, resIP is checked first.
-    if (resIP && resIP.consumedPoints > 50) {
-      exceedRateLimiterRes = resIP;
-    } else if (resEmailAndIP && resEmailAndIP.consumedPoints > 1) {
-      exceedRateLimiterRes = resEmailAndIP;
-    }
-
-    if (exceedRateLimiterRes) {
-      setRateLimitErrorHeaders(res, exceedRateLimiterRes);
+    try {
+      await authBruteIPRateLimiter.consume(ip);
+      await passwordResetRateLimiter.consume(emailIPKey);
+    } catch (rateLimiterRes) {
+      if (rateLimiterRes instanceof Error) {
+        throw rateLimiterRes;
+      }
+      setRateLimitErrorHeaders(res, rateLimiterRes);
       throw new RateLimitedError();
     }
+
+    // TODO try send email
   }
 );
