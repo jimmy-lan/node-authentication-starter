@@ -12,6 +12,7 @@ import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
 import { PasswordEncoder } from "../../services";
 import { signTokens } from "../../util";
+import { tokenConfig } from "../../config";
 
 const router = Router();
 
@@ -44,7 +45,9 @@ router.post(
     const user = User.build({
       email,
       password,
-      clientSecret: PasswordEncoder.randomString(20),
+      clientSecret: PasswordEncoder.randomString(
+        tokenConfig.clientSecretLength
+      ),
       profile: { name: { first: firstName, last: lastName } },
       role: UserRole.member,
     });
