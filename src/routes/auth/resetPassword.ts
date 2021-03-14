@@ -6,7 +6,7 @@
 import { Request, Response, Router } from "express";
 
 import { ResetTokenPayload, ResPayload } from "../../types";
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import {
   authBruteIPRateLimiter,
@@ -50,22 +50,28 @@ const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
   );
 };
 
+const verifyPasswordResetToken = (token: string) => {
+  const tokenProcessor = new TokenProcessor("HS256");
+  const resetSecret = process.env.RESET_SECRET!;
+  return tokenProcessor.verifyToken<ResetTokenPayload>(token, resetSecret);
+};
+
 const sendPasswordResetEmail = async (
   user: LeanDocument<UserDocument>,
   token: string
 ) => {
-  const { first, last } = user.profile.name;
-  const fullName = `${first} ${last}`;
+  const { first } = user.profile.name;
+  const name = first;
   const link = `http://localhost:5000/api/v1/users/reset-password/${token}`;
 
   try {
     await new TemplateEmailSender()
       .setRecipient(user.email)
-      .setFrom("admin@thepolyteam.com")
+      .setFrom("account@thepolyteam.com")
       .setTemplateId("d-9c30543786c5498c9281c32e8d552683")
       .setDynamicTemplateData({
         subject: "Your Password Reset Request",
-        name: fullName,
+        name,
         link,
       })
       .send();
@@ -74,6 +80,33 @@ const sendPasswordResetEmail = async (
     throw error;
   }
 };
+
+const sendPasswordResetConfirmationEmail = async (
+  user: LeanDocument<UserDocument>
+) => {
+  const { first } = user.profile.name;
+  const name = first;
+
+  try {
+    await new TemplateEmailSender()
+      .setRecipient(user.id)
+      .setFrom("account@thepolyteam.com")
+      .setTemplateId("d-c7534e35a1f5472d957df1a4b6120d1a")
+      .setDynamicTemplateData({
+        subject: "Password Reset Confirmation",
+        name,
+      })
+      .send();
+  } catch (error) {
+    console.log(error.response?.body?.errors);
+    throw error;
+  }
+};
+
+/*
+ * Route for password-reset request.
+ * Users use this route to obtain an email with a password reset link.
+ */
 
 router.post(
   "/reset-password",
@@ -101,6 +134,23 @@ router.post(
     await sendPasswordResetEmail(user, token);
 
     return res.json({ success: true });
+  }
+);
+
+/*
+ * Route for confirming password reset.
+ * Users supply a new password to this route.
+ */
+router.post(
+  "/reset-password/:token",
+  [
+    query("token").isLength({ min: 10 }),
+    body("newPassword").isLength({ min: 6, max: 50 }),
+  ],
+  validateRequest,
+  (req: Request, res: Response<ResPayload>) => {
+    const { token } = req.query;
+    const { newPassword } = req.body;
   }
 );
 
