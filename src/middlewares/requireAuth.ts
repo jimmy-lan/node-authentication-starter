@@ -13,6 +13,7 @@ import { TokenProcessor, userRequestRateLimiter } from "../services";
 import { RateLimitedError, UnauthorizedError } from "../errors";
 import { User } from "../models";
 import { setRateLimitErrorHeaders, signTokens } from "../util";
+import { tokenConfig } from "../config";
 
 /**
  * Extract token string from request header.
@@ -121,7 +122,10 @@ export const requireAuth = async (
     throw new UnauthorizedError();
   }
 
-  const tokenProcessor = new TokenProcessor("HS512");
+  const algorithm =
+    tokenConfig.algorithms.access || tokenConfig.algorithms.refresh!;
+
+  const tokenProcessor = new TokenProcessor(algorithm);
   try {
     req.user = verifyAccessToken(accessToken, tokenProcessor);
   } catch (error) {

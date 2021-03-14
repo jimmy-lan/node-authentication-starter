@@ -6,6 +6,7 @@
 
 import jwt, { Algorithm, SignOptions, VerifyOptions } from "jsonwebtoken";
 import { UnauthorizedError } from "../errors";
+import { tokenConfig } from "../config";
 
 export enum TokenType {
   access = "access",
@@ -37,16 +38,16 @@ export class TokenProcessor {
       switch (tokenType) {
         case TokenType.access:
           // Set 5 minute expiration time for access tokens
-          payload.exp = payload.iat + 5 * 60 * 1000;
+          payload.exp = payload.iat + tokenConfig.defaultExpirations.access;
           // payload.exp = payload.iat + 5 * 60 * 1000;
           break;
         case TokenType.reset:
           // Set 10 minute expiration time for password reset
-          payload.exp = payload.iat + 10 * 60 * 1000;
+          payload.exp = payload.iat + tokenConfig.defaultExpirations.reset;
           break;
         case TokenType.refresh:
           // Set 7 day expiration time for refresh tokens
-          payload.exp = payload.iat + 7 * 24 * 60 * 1000;
+          payload.exp = payload.iat + tokenConfig.defaultExpirations.refresh;
           break;
       }
     }

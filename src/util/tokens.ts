@@ -14,6 +14,7 @@ import { AccessTokenPayload, RefreshTokenPayload } from "../types";
 import { RateLimitedError } from "../errors";
 import { setRateLimitErrorHeaders } from "./rateLimit";
 import { Response } from "express";
+import { tokenConfig } from "../config";
 
 /**
  * Sign refresh and access tokens for `user`.
@@ -29,7 +30,9 @@ export const signTokens = async (
   refreshRecord: boolean = true,
   res?: Response
 ) => {
-  const tokenProcessor = new TokenProcessor("HS512");
+  const algorithm =
+    tokenConfig.algorithms.access || tokenConfig.algorithms.refresh!;
+  const tokenProcessor = new TokenProcessor(algorithm);
   const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
   const accessSecret = process.env.ACCESS_SECRET!;
   const userId = user._id || user.id;
