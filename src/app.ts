@@ -21,6 +21,7 @@ const app = express();
 const requiredVariables = [
   "DB_URI",
   "ACCESS_SECRET",
+  "RESET_SECRET",
   "REFRESH_SECRET",
   "REDIS_URI",
   "SENDGRID_KEY",
