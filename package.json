@@ -13,11 +13,6 @@
     "test": "jest --forceExit --coverage --verbose",
     "doc": "./scripts/open-browser.sh http://localhost:3000 && docsify serve docs/"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": ["./test/setupTests.ts"]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lanyanxiang/template-node-authentication.git"
@@ -53,7 +48,6 @@
     "mongodb-memory-server": "^6.9.6",
     "redis-mock": "^0.56.3",
     "supertest": "^6.1.3",
-    "ts-jest": "^26.5.2",
     "ts-node-dev": "^1.1.6",
     "tslint": "^6.1.3",
     "typescript": "^4.2.2"

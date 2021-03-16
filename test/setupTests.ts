@@ -26,7 +26,7 @@ beforeAll(async () => {
   });
 });
 
-beforeEach(async () => {
+afterEach(async () => {
   jest.clearAllMocks();
   // @ts-ignore
   const collections = await mongoose.connection.db.collections();
