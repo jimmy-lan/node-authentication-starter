@@ -30,8 +30,7 @@ export const signTokens = async (
   refreshRecord: boolean = true,
   res?: Response
 ) => {
-  const algorithm =
-    tokenConfig.algorithms.access || tokenConfig.algorithms.refresh!;
+  const algorithm = tokenConfig.algorithms.access;
   const tokenProcessor = new TokenProcessor(algorithm);
   const refreshSecret = process.env.REFRESH_SECRET + user.clientSecret;
   const accessSecret = process.env.ACCESS_SECRET!;

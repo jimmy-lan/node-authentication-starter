@@ -122,8 +122,7 @@ export const requireAuth = async (
     throw new UnauthorizedError();
   }
 
-  const algorithm =
-    tokenConfig.algorithms.access || tokenConfig.algorithms.refresh!;
+  const algorithm = tokenConfig.algorithms.access;
 
   const tokenProcessor = new TokenProcessor(algorithm);
   try {

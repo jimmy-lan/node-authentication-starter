@@ -18,7 +18,7 @@ export interface TokenConfig {
    * and access tokens. Please provide only one of "access" and "refresh"
    * fields. If more than one option is provided, "access" will be used.
    */
-  algorithms: Partial<{ [key in keyof typeof TokenType]: Algorithm }>;
+  algorithms: { [key in keyof typeof TokenType]: Algorithm };
   /** Default time for each type of token to expire, measured in milliseconds. */
   defaultExpirations: { [key in keyof typeof TokenType]: number };
 }
@@ -28,6 +28,7 @@ export const tokenConfig: TokenConfig = {
   clientSecretLength: 20,
   algorithms: {
     access: "HS512",
+    refresh: "HS512", // Currently ignored, using algorithm for `access` instead
     reset: "HS256",
   },
   defaultExpirations: {

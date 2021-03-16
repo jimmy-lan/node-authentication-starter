@@ -53,7 +53,7 @@ const clearRateLimit = async (
 };
 
 const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
-  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset!);
+  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset);
   const userId = user._id || user.id;
   const clientSecret = user.clientSecret;
   const resetSecret = process.env.RESET_SECRET! + clientSecret;
@@ -65,12 +65,12 @@ const getPasswordResetToken = (user: LeanDocument<UserDocument>) => {
 };
 
 const decodePasswordResetToken = (token: string) => {
-  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset!);
+  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset);
   return tokenProcessor.decodeToken(token);
 };
 
 const verifyPasswordResetToken = (token: string, clientSecret: string) => {
-  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset!);
+  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset);
   const resetSecret = process.env.RESET_SECRET! + clientSecret;
   return tokenProcessor.verifyToken<ResetTokenPayload>(token, resetSecret);
 };
