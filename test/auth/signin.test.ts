@@ -32,16 +32,16 @@ describe("sign in api", () => {
     const { email, password, clientSecret, role } = sampleUser;
     const sampleUserEntry = {
       email,
-      password: PasswordEncoder.toHash(password),
+      password: await PasswordEncoder.toHash(password),
       clientSecret,
       role,
     };
 
+    console.log(sampleUserEntry);
+
     // Insert to document
     const userCollection = mongoose.connection.collection("users");
-    await userCollection.insertOne(sampleUserEntry, {
-      bypassDocumentValidation: true,
-    });
+    await userCollection.insertOne(sampleUserEntry, {});
   });
 
   afterAll(async () => {
@@ -69,6 +69,29 @@ describe("sign in api", () => {
       .post(apiLink("/signin"))
       .send({ email: "random-string-that-is-not-email", password: "password" })
       .expect(400);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+  });
+
+  it("responds with 401 when invalid email or password is provided", async () => {
+    let response;
+
+    response = await request(app)
+      .post(apiLink("/signin"))
+      .send({ email: sampleUser.email, password: "jafjewoi" })
+      .expect(401);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+
+    response = await request(app)
+      .post(apiLink("/signin"))
+      .send({
+        email: "doesnotexist@example.com",
+        password: sampleUser.password,
+      })
+      .expect(401);
 
     expect(response.body.success).toBeDefined();
     expect(response.body.success).toBeFalsy();
