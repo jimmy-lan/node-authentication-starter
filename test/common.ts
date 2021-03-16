@@ -11,6 +11,8 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
+export const apiLink = (uri: string) => `/api/v1/users${uri}`;
+
 export const setEnvVariables = () => {
   process.env.ACCESS_SECRET = "asdf";
   process.env.REFRESH_SECRET = "asdf";

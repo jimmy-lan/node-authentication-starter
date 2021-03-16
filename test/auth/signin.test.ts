@@ -9,9 +9,12 @@ import mongoose from "mongoose";
 import { app } from "../../src/app";
 import { PasswordEncoder } from "../../src/services";
 import { UserRole } from "../../src/types";
-import { connectMongo, setEnvVariables, tearDownMongo } from "../common";
-
-const apiLink = (uri: string) => `/api/v1/users${uri}`;
+import {
+  connectMongo,
+  setEnvVariables,
+  tearDownMongo,
+  apiLink,
+} from "../common";
 
 jest.mock("../../src/services/redisClient");
 jest.mock("../../src/services/rateLimiters");
