@@ -13,6 +13,7 @@ const rateLimiter = {
       isFirstInDuration: false, // action is first in current duration
     };
   }),
+  delete: jest.fn(),
 };
 
 export const tokenRefreshRateLimiter = rateLimiter;

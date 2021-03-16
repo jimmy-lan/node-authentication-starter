@@ -74,7 +74,7 @@ describe("sign in api", () => {
     expect(response.body.success).toBeFalsy();
   });
 
-  it("responds with 401 when invalid email or password is provided", async () => {
+  it("responds with 401 when invalid email or password is provided.", async () => {
     let response;
 
     response = await request(app)
@@ -95,5 +95,29 @@ describe("sign in api", () => {
 
     expect(response.body.success).toBeDefined();
     expect(response.body.success).toBeFalsy();
+  });
+
+  it("responds with 200 for successful sign in.", async () => {
+    const response = await request(app)
+      .post(apiLink("/signin"))
+      .send({ email: sampleUser.email, password: sampleUser.password })
+      .expect(200);
+
+    expect(response.body.success).toBeTruthy();
+  });
+
+  it("responds with access token, refresh token, and user information on successful sign in.", async () => {
+    const response = await request(app)
+      .post(apiLink("/signin"))
+      .send({ email: sampleUser.email, password: sampleUser.password })
+      .expect(200);
+
+    console.log(response.body);
+
+    expect(response.body.payload.accessToken).toBeDefined();
+    expect(response.body.payload.refreshToken).toBeDefined();
+    expect(response.body.payload.accessToken.split(".")).toHaveLength(3);
+    expect(response.body.payload.refreshToken.split(".")).toHaveLength(3);
+    expect(response.body.payload.user).toBeDefined();
   });
 });
