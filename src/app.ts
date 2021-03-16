@@ -4,51 +4,16 @@
  */
 
 import express from "express";
-import mongoose from "mongoose";
 import morgan from "morgan";
 import "express-async-errors";
 
 // Router Imports
 import { authRouter } from "./routes";
-import { getMissingEnvVariables } from "./util";
 import { handleErrors } from "./middlewares";
 import { NotFoundError } from "./errors";
 import { requireAuth, rateLimitIp } from "./middlewares";
 
 const app = express();
-
-// Check for missing environment variables
-const requiredVariables = [
-  "DB_URI",
-  "ACCESS_SECRET",
-  "RESET_SECRET",
-  "REFRESH_SECRET",
-  "REDIS_URI",
-  "SENDGRID_KEY",
-];
-const missingVariables = getMissingEnvVariables(requiredVariables);
-
-if (missingVariables.length) {
-  console.error(
-    `Missing environment Variables: ${missingVariables.join(", ")}`
-  );
-  console.warn("Process exiting.");
-  process.exit(1);
-}
-
-// Connect to Mongo DB
-mongoose
-  .connect(process.env.DB_URI!, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log(`Connected to database.`);
-  })
-  .catch((error: Error) => {
-    console.error(error);
-  });
 
 // App settings
 app.set("port", process.env.PORT || 3000);

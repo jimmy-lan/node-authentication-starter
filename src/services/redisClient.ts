@@ -22,7 +22,9 @@ redisClient.on("ready", () => {
 });
 
 redisClient.on("error", (error) => {
-  console.log(error);
+  if (process.env.NODE_ENV !== "testing") {
+    console.log(error);
+  }
 });
 
 export { redisClient };

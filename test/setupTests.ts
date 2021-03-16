@@ -7,10 +7,14 @@ import mongoose from "mongoose";
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
-  process.env.JWT_SECRET = "asdf";
+  // Env variables
+  process.env.ACCESS_SECRET = "asdf";
+  process.env.REFRESH_SECRET = "asdf";
+  process.env.RESET_SECRET = "asdf";
   // Stop NODE from complaining about self-signed certificates
   // during test.
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+  process.env.NODE_ENV = "testing";
 
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();

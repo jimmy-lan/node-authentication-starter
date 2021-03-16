@@ -73,7 +73,7 @@ A `.env.example` file is provided under the **root directory** to show example e
 However, not all variables are required for the service to run.
 You can find a list of required environment variables by looking into the file `src/app.ts`.
 
-Close to the top of the file `src/app.ts`, you will observe an array with the name `requiredVariables`.
+Close to the top of the file `src/index.ts`, you will observe an array with the name `requiredVariables`.
 This array lists the names of the environment variables that the server depends on.
 An error will be thrown, causing the process to halt if one or more of these variables are not defined.
 
