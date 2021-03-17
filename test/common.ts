@@ -2,10 +2,10 @@
  * Created by Jimmy Lan
  * Creation Date: 2021-03-16
  * Description:
- *     I used to have a file named `setupTests.ts` here which will be run before
- *   all test cases. However, Jest and Typescript does not seem to cooperate very
- *   well at the time when this project was bootstrapped, so I had to make the decision
- *   of removing that file and extract common helper functions instead.
+ *     I used to put many of the logic defined in this file in `setupTests.ts`.
+ *   However, Jest and Typescript does not seem to cooperate very well at the time
+ *   when this project was bootstrapped, so I had to make the decision of removing
+ *   that file and extract common helper functions instead.
  */
 
 import mongoose from "mongoose";
@@ -20,7 +20,7 @@ export const setEnvVariables = () => {
   // Stop NODE from complaining about self-signed certificates
   // during test.
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-  process.env.NODE_ENV = "testing";
+  process.env.NODE_ENV = "test";
 };
 
 let mongo: MongoMemoryServer;

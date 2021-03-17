@@ -23,6 +23,9 @@ app.set("env", process.env.NODE_ENV || app.get("env"));
 app.use(express.json());
 app.use(
   morgan("tiny", {
+    skip() {
+      return process.env.NODE_ENV === "test";
+    },
     stream: {
       write(str: string) {
         console.log(str.trim());

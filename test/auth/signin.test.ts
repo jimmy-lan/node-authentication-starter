@@ -40,8 +40,6 @@ describe("sign in api", () => {
       role,
     };
 
-    console.log(sampleUserEntry);
-
     // Insert to document
     const userCollection = mongoose.connection.collection("users");
     await userCollection.insertOne(sampleUserEntry, {});
@@ -114,8 +112,6 @@ describe("sign in api", () => {
       .post(apiLink("/signin"))
       .send({ email: sampleUser.email, password: sampleUser.password })
       .expect(200);
-
-    console.log(response.body);
 
     expect(response.body.payload.accessToken).toBeDefined();
     expect(response.body.payload.refreshToken).toBeDefined();

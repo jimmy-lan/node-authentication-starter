@@ -12,6 +12,9 @@ import {
 import request from "supertest";
 import { app } from "../../src/app";
 
+jest.mock("../../src/services/redisClient");
+jest.mock("../../src/services/rateLimiters");
+
 describe("sign up api", () => {
   beforeAll(async () => {
     await connectMongo();
