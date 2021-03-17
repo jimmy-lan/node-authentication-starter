@@ -10,7 +10,8 @@
     "watch-ts": "tsc -w",
     "build": "tsc -p .",
     "lint": "tsc -p . --noEmit && eslint \\\"**/*.{js,ts}\\\" --quiet --fix",
-    "test": "jest --forceExit --coverage --verbose",
+    "test": "jest --forceExit --watchAll --verbose",
+    "testc": "jest --forceExit --coverage --verbose",
     "doc": "./scripts/open-browser.sh http://localhost:3000 && docsify serve docs/"
   },
   "repository": {
