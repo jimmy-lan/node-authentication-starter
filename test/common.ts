@@ -35,12 +35,16 @@ export const connectMongo = async () => {
   });
 };
 
-export const tearDownMongo = async () => {
+export const clearDatabase = async () => {
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {
     await collection.deleteMany({});
   }
+};
+
+export const tearDownMongo = async () => {
+  await clearDatabase();
 
   await mongo.stop();
   await mongoose.connection.close();
