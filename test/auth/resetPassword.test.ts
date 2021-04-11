@@ -109,3 +109,60 @@ describe("reset-password request api", () => {
     expect(TemplateEmailSender.prototype.send).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("reset password confirm api", () => {
+  const sampleUser = {
+    email: "user@thepolyteam.com",
+    password: "password",
+    clientSecret: PasswordEncoder.randomString(20),
+    role: UserRole.member,
+    profile: {
+      name: {
+        first: "User",
+        last: "Name",
+      },
+    },
+  };
+
+  beforeAll(async () => {
+    setEnvVariables();
+    await connectMongo();
+
+    // Required by Jest
+    TemplateEmailSender.prototype.setDynamicTemplateData = jest
+      .fn()
+      .mockReturnThis();
+    TemplateEmailSender.prototype.setRecipient = jest.fn().mockReturnThis();
+    TemplateEmailSender.prototype.setTemplateId = jest.fn().mockReturnThis();
+    TemplateEmailSender.prototype.setFrom = jest.fn().mockReturnThis();
+
+    // Setup sample user
+    const { email, password, clientSecret, role, profile } = sampleUser;
+    const sampleUserEntry = {
+      email,
+      password: await PasswordEncoder.toHash(password),
+      clientSecret,
+      role,
+      profile,
+    };
+
+    // Insert to document
+    const userCollection = mongoose.connection.collection("users");
+    await userCollection.insertOne(sampleUserEntry, {});
+  });
+
+  afterAll(async () => {
+    jest.clearAllMocks();
+    await tearDownMongo();
+  });
+
+  it("responds with 400 when request is invalid", async () => {
+    const response = await request(app)
+      .post(apiLink("/reset-password/123"))
+      .send({})
+      .expect(400);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+  });
+});
