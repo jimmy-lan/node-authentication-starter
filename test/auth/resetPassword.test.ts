@@ -4,7 +4,7 @@
  */
 
 import { PasswordEncoder, TokenProcessor, TokenType } from "../../src/services";
-import { UserRole } from "../../src/types";
+import { ResetTokenPayload, UserRole } from "../../src/types";
 import {
   apiLink,
   connectMongo,
@@ -126,7 +126,6 @@ describe("reset password confirm api", () => {
     },
   };
 
-  const resetSecret = process.env.RESET_SECRET! + sampleUser.clientSecret;
   const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset);
 
   beforeAll(async () => {
@@ -153,10 +152,10 @@ describe("reset password confirm api", () => {
 
     // Insert to document
     const userCollection = mongoose.connection.collection("users");
-    const insertResult = await userCollection.insertOne(sampleUserEntry, {});
+    const { insertedId } = await userCollection.insertOne(sampleUserEntry, {});
 
     // Get user id
-    sampleUser.id = insertResult.insertedId;
+    sampleUser.id = insertedId;
   });
 
   afterAll(async () => {
@@ -187,6 +186,8 @@ describe("reset password confirm api", () => {
   });
 
   it("responds with 404 when subject user does not exist", async () => {
+    const resetSecret = process.env.RESET_SECRET! + sampleUser.clientSecret;
+
     const token = tokenProcessor.issueToken(
       { sub: "fjaksfweqiof" },
       resetSecret,
@@ -200,5 +201,35 @@ describe("reset password confirm api", () => {
 
     expect(response.body.success).toBeDefined();
     expect(response.body.success).toBeFalsy();
+  });
+
+  it("responds with 200 status, changes user's password, and sends confirmation email on valid request", async () => {
+    const resetSecret = process.env.RESET_SECRET! + sampleUser.clientSecret;
+    const newPassword = "newPassword";
+    sampleUser.password = newPassword;
+
+    const token = tokenProcessor.issueToken<ResetTokenPayload>(
+      { sub: sampleUser.id },
+      resetSecret,
+      TokenType.reset
+    );
+
+    const response = await request(app)
+      .post(apiLink("/reset-password/" + token))
+      .send({ newPassword })
+      .expect(200);
+
+    expect(response.body.success).toBeTruthy();
+
+    // Test if password has been changed in the database
+    const userCollection = mongoose.connection.collection("users");
+    const userDocument = await userCollection.findOne({ _id: sampleUser.id });
+    const userPassword = userDocument.password;
+    expect(
+      PasswordEncoder.compare(sampleUser.password, userPassword)
+    ).toBeTruthy();
+
+    // Test if confirmation email has been sent
+    expect(TemplateEmailSender.prototype.send).toHaveBeenCalledTimes(1);
   });
 });
