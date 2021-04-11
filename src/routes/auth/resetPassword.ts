@@ -126,7 +126,6 @@ const sendPasswordResetConfirmationEmail = async (
  * Route for password-reset request.
  * Users use this route to obtain an email with a password reset link.
  */
-
 router.post(
   "/reset-password",
   [

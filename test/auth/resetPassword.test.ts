@@ -3,7 +3,7 @@
  * Creation Date: 2021-03-17
  */
 
-import { PasswordEncoder } from "../../src/services";
+import { PasswordEncoder, TokenProcessor, TokenType } from "../../src/services";
 import { UserRole } from "../../src/types";
 import {
   apiLink,
@@ -15,6 +15,7 @@ import mongoose from "mongoose";
 import { app } from "../../src/app";
 import request from "supertest";
 import { TemplateEmailSender } from "../../src/services/EmailSender";
+import { tokenConfig } from "../../src/config";
 
 jest.mock("../../src/services/redisClient");
 jest.mock("../../src/services/rateLimiters");
@@ -112,6 +113,7 @@ describe("reset-password request api", () => {
 
 describe("reset password confirm api", () => {
   const sampleUser = {
+    id: "",
     email: "user@thepolyteam.com",
     password: "password",
     clientSecret: PasswordEncoder.randomString(20),
@@ -123,6 +125,9 @@ describe("reset password confirm api", () => {
       },
     },
   };
+
+  const resetSecret = process.env.RESET_SECRET! + sampleUser.clientSecret;
+  const tokenProcessor = new TokenProcessor(tokenConfig.algorithms.reset);
 
   beforeAll(async () => {
     setEnvVariables();
@@ -148,7 +153,10 @@ describe("reset password confirm api", () => {
 
     // Insert to document
     const userCollection = mongoose.connection.collection("users");
-    await userCollection.insertOne(sampleUserEntry, {});
+    const insertResult = await userCollection.insertOne(sampleUserEntry, {});
+
+    // Get user id
+    sampleUser.id = insertResult.insertedId;
   });
 
   afterAll(async () => {
@@ -156,11 +164,39 @@ describe("reset password confirm api", () => {
     await tearDownMongo();
   });
 
-  it("responds with 400 when request is invalid", async () => {
+  it("responds with 400 when request body is invalid", async () => {
     const response = await request(app)
       .post(apiLink("/reset-password/123"))
       .send({})
       .expect(400);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+  });
+
+  it("responds with 404 when token is invalid", async () => {
+    const token = "AnInvalidToken";
+
+    const response = await request(app)
+      .post(apiLink("/reset-password/" + token))
+      .send({ newPassword: "password" })
+      .expect(404);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+  });
+
+  it("responds with 404 when subject user does not exist", async () => {
+    const token = tokenProcessor.issueToken(
+      { sub: "fjaksfweqiof" },
+      resetSecret,
+      TokenType.reset
+    );
+
+    const response = await request(app)
+      .post(apiLink("/reset-password/" + token))
+      .send({ newPassword: "newPassword" })
+      .expect(404);
 
     expect(response.body.success).toBeDefined();
     expect(response.body.success).toBeFalsy();
