@@ -8,18 +8,24 @@ services:
       - .:/code
     environment:
       - REDIS_URI=redis://cache
+#      - DB_URI=mongodb://database
     env_file:
       - ./.env
+#  mongo:
+#    image: "mongo:alpine"
+#    container_name: database
+#    expose:
+#      - "27017"
   redis:
     image: "redis:alpine"
     container_name: cache
     expose:
       - "6379"
-  nginx:
-    image: nginx.image.uri:latest
-    ports:
-      - "80:80"
-    links: # new
-      - web
-    volumes_from:
-      - web
+#  nginx:
+#    image: nginx.image.uri:latest
+#    ports:
+#      - "80:80"
+#    links: # new
+#      - web
+#    volumes_from:
+#      - web
