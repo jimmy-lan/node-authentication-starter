@@ -4,7 +4,7 @@
 
 ---
 
-> In this article, we will address two ways to run a local copy of this project.
+> In this article, we will address three ways to run a local copy of this project.
 > We will explore:
 > 
 > * [Run Project Locally](#run-project-locally)
