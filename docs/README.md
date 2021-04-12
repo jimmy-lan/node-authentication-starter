@@ -1,6 +1,6 @@
 # Authentication Server
 
-?> Author: Jimmy Lan, Date Created: 2021-03-12, Last Updated: 2021-03-12
+?> Author: Jimmy Lan, Date Created: 2021-03-12, Last Updated: 2021-04-11
 
 ---
 
@@ -59,7 +59,11 @@ npm run doc
 
 ### Run tests
 ```bash
+# Run test in regular watch mode
 npm run test
+
+# Run test and show test coverage
+npm run testc
 ```
 
 Please look at `package.json` for other available scripts.
@@ -71,7 +75,7 @@ Please look at `package.json` for other available scripts.
 A `.env.example` file is provided under the **root directory** to show example environment variables.
 
 However, not all variables are required for the service to run.
-You can find a list of required environment variables by looking into the file `src/app.ts`.
+You can find a list of required environment variables by looking into the file `src/index.ts`.
 
 Close to the top of the file `src/index.ts`, you will observe an array with the name `requiredVariables`.
 This array lists the names of the environment variables that the server depends on.
