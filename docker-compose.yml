@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    environment:
+      - REDIS_URI=redis://cache
+    env_file:
+      - ./.env
+  redis:
+    image: "redis:alpine"
+    container_name: cache
+    expose:
+      - "6379"
+  nginx:
+    image: nginx.image.uri:latest
+    ports:
+      - "80:80"
+    links: # new
+      - web
+    volumes_from:
+      - web
