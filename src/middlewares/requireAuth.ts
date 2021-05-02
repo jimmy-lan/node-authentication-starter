@@ -8,7 +8,7 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 
-import { AccessTokenPayload, RefreshTokenPayload, ResPayload } from "../types";
+import { AccessTokenPayload, RefreshTokenPayload, ResBody } from "../types";
 import { TokenProcessor, userRequestRateLimiter } from "../services";
 import { RateLimitedError, UnauthorizedError } from "../errors";
 import { User } from "../models";
@@ -114,7 +114,7 @@ const verifyAndUseRefreshToken = async (
 
 export const requireAuth = async (
   req: Request,
-  res: Response<ResPayload>,
+  res: Response<ResBody>,
   next: NextFunction
 ) => {
   const accessToken = extractTokenFromHeader(req, "Authorization", "bearer");

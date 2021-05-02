@@ -6,7 +6,7 @@
 import { Request, Response, Router } from "express";
 import { body } from "express-validator";
 
-import { ResPayload, UserRole } from "../../types";
+import { ResBody, UserRole } from "../../types";
 import { User } from "../../models";
 import { validateRequest } from "../../middlewares";
 import { BadRequestError } from "../../errors";
@@ -53,7 +53,7 @@ router.post(
       .contains(" "),
   ],
   validateRequest,
-  async (req: Request, res: Response<ResPayload>) => {
+  async (req: Request, res: Response<ResBody>) => {
     const { email, password, firstName, lastName } = req.body;
 
     await abortIfUserExists(email);

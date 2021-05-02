@@ -5,7 +5,7 @@
 
 import { NextFunction, Request, Response } from "express";
 import { HttpError } from "../errors";
-import { ResPayload } from "../types";
+import { ResBody } from "../types";
 
 /**
  * Middleware to handle async errors thrown during execution.
@@ -30,7 +30,7 @@ export const handleErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  const response: ResPayload = {
+  const response: ResBody = {
     success: false,
     errors: [{ message: "Oops, we can't process this request right now." }],
   };

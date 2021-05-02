@@ -3,5 +3,5 @@
  * Creation Date: 2021-03-10
  */
 
-export * from "./ResPayload";
-export * from "./AuthRes";
+export * from "./ResBody";
+export * from "./AuthResBody";

@@ -5,7 +5,7 @@
 
 import { Request, Response, Router } from "express";
 
-import { ResetTokenPayload, ResPayload } from "../../types";
+import { ResetTokenPayload, ResBody } from "../../types";
 import { body, param } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import {
@@ -135,7 +135,7 @@ router.post(
       .isLength({ min: 6, max: 80 }),
   ],
   validateRequest,
-  async (req: Request, res: Response<ResPayload>) => {
+  async (req: Request, res: Response<ResBody>) => {
     const { email } = req.body;
 
     await checkRateLimit(req, res);
@@ -166,7 +166,7 @@ router.post(
     body("newPassword").isLength({ min: 6, max: 50 }),
   ],
   validateRequest,
-  async (req: Request, res: Response<ResPayload>) => {
+  async (req: Request, res: Response<ResBody>) => {
     const { token } = req.params;
     const { newPassword } = req.body;
 

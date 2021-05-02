@@ -5,7 +5,7 @@
 
 import { SerializedHttpError } from "../../errors";
 
-export interface ResPayload {
+export interface ResBody {
   success: boolean;
   time?: string;
   /**

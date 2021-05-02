@@ -14,7 +14,7 @@ import {
   PasswordEncoder,
   signInRateLimiter,
 } from "../../services";
-import { AuthResPayload } from "../../types";
+import { AuthResBody } from "../../types";
 import { setRateLimitErrorHeaders, signTokens } from "../../util";
 
 const router = Router();
@@ -29,7 +29,7 @@ router.post(
     body("password").notEmpty(),
   ],
   validateRequest,
-  async (req: Request, res: Response<AuthResPayload>) => {
+  async (req: Request, res: Response<AuthResBody>) => {
     const ip = req.ip;
     const { email, password } = req.body;
     const emailIpPair = `${email}${ip}`;

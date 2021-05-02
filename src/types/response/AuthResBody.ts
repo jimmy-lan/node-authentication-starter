@@ -5,14 +5,14 @@
  *   This file stores type declaration for authentication response payloads.
  */
 
-import { ResPayload } from "./ResPayload";
+import { ResBody } from "./ResBody";
 import { UserDocument, UserProps } from "../../models";
 
 /**
  * Response payload from general authentication routes
  * e.g. sign in, sign up routes.
  */
-export interface AuthResPayload extends ResPayload {
+export interface AuthResBody extends ResBody {
   payload: {
     user: UserDocument | UserProps;
     refreshToken: string;
