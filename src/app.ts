@@ -37,9 +37,6 @@ app.use(rateLimitIp);
 
 // Register routers
 app.use("/api/v1/users", authRouter);
-app.use("/api/v1/test", requireAuth, (req, res) => {
-  return res.json({ success: true, data: "hi" });
-});
 
 // Resource not found
 app.all("*", () => {
