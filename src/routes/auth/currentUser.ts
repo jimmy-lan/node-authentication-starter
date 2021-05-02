@@ -8,9 +8,27 @@
  */
 
 import { Router, Request, Response } from "express";
+import { ResBody, UserRole } from "../../types";
+
+/**
+ * Response body structure for the get current user route.
+ */
+export interface CurrentUserResBody extends ResBody {
+  payload: {
+    email: String;
+    role: UserRole;
+    profile: {
+      name: {
+        first: String;
+        last: String;
+      };
+      avatar?: String;
+    };
+  };
+}
 
 const router = Router();
 
-router.get("/current", (req: Request, res: Response) => {});
+router.get("/current", (req: Request, res: Response<CurrentUserResBody>) => {});
 
 export { router };
