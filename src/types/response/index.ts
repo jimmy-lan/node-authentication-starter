@@ -4,4 +4,4 @@
  */
 
 export * from "./ResBody";
-export * from "./auth";
+export * from "./AuthResBody";
