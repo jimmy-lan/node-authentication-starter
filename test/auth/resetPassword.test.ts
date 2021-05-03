@@ -12,8 +12,9 @@ import {
   tearDownMongo,
 } from "../common";
 import mongoose from "mongoose";
-import { app } from "../../src/app";
 import request from "supertest";
+
+import { app } from "../../src/app";
 import { TemplateEmailSender } from "../../src/services/EmailSender";
 import { tokenConfig } from "../../src/config";
 

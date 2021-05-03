@@ -3,6 +3,9 @@
  * Creation Date: 2021-03-16
  */
 
+import request from "supertest";
+import mongoose from "mongoose";
+
 import {
   apiLink,
   clearDatabase,
@@ -10,9 +13,7 @@ import {
   setEnvVariables,
   tearDownMongo,
 } from "../common";
-import request from "supertest";
 import { app } from "../../src/app";
-import mongoose from "mongoose";
 import { PasswordEncoder } from "../../src/services";
 
 jest.mock("../../src/services/redisClient");
