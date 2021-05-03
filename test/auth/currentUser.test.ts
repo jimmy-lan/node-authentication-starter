@@ -68,4 +68,28 @@ describe("current user api", () => {
     expect(response.body.success).toBeDefined();
     expect(response.body.success).toBeFalsy();
   });
+
+  it("responds with 401 if authorization header is invalid.", async () => {
+    const response = await request(app)
+      .get(apiLink("/current"))
+      .set("Authorization", "qjwe9rj21irm1u28eidjfaf2q")
+      .send()
+      .expect(401);
+
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+  });
+
+  it("response with 200 and details about user if given valid inputs.", async () => {
+    const response = await request(app)
+      .get(apiLink("/current"))
+      .set("Authorization", sampleUser.accessToken)
+      .send()
+      .expect(200);
+
+    expect(response.body.success).toBeTruthy();
+    expect(response.body.payload).toBeDefined();
+    expect(response.body.payload.email).toBeDefined();
+    expect(response.body.payload.email).toEqual(sampleUser.email);
+  });
 });
