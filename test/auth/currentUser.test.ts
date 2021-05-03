@@ -25,6 +25,12 @@ describe("current user api", () => {
     email: "user@thepolyteam.com",
     password: "password",
     clientSecret: PasswordEncoder.randomString(20),
+    profile: {
+      name: {
+        first: "Admin",
+        last: "User",
+      },
+    },
     role: UserRole.member,
     // Not in database
     accessToken: "", // to be updated in beforeAll
@@ -35,12 +41,13 @@ describe("current user api", () => {
     await connectMongo();
 
     // Setup sample user
-    const { email, password, clientSecret, role } = sampleUser;
+    const { email, password, clientSecret, role, profile } = sampleUser;
     const sampleUserEntry = {
       email,
       password: await PasswordEncoder.toHash(password),
       clientSecret,
       role,
+      profile,
     };
 
     // Insert to document
@@ -72,7 +79,7 @@ describe("current user api", () => {
   it("responds with 401 if authorization header is invalid.", async () => {
     const response = await request(app)
       .get(apiLink("/current"))
-      .set("Authorization", "qjwe9rj21irm1u28eidjfaf2q")
+      .set("Authorization", "bearer qjwe9rj21irm1u28eidjfaf2q")
       .send()
       .expect(401);
 
@@ -83,7 +90,7 @@ describe("current user api", () => {
   it("response with 200 and details about user if given valid inputs.", async () => {
     const response = await request(app)
       .get(apiLink("/current"))
-      .set("Authorization", sampleUser.accessToken)
+      .set("Authorization", `bearer ${sampleUser.accessToken}`)
       .send()
       .expect(200);
 
