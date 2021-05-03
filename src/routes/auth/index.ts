@@ -8,9 +8,10 @@ import { Router } from "express";
 import { signUpRouter } from "./signup";
 import { signInRouter } from "./signin";
 import { resetPasswordRouter } from "./resetPassword";
+import { currentUserRoute } from "./currentUser";
 
 const router = Router();
 
-router.use(signUpRouter, signInRouter, resetPasswordRouter);
+router.use(signUpRouter, signInRouter, resetPasswordRouter, currentUserRoute);
 
 export { router as authRouter };
