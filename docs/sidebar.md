@@ -8,3 +8,5 @@
 - [Setup Guide](/onboard/setup.md)
 
 **API**
+
+- [Authentication](/api/authentication.md)
