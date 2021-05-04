@@ -1,8 +1,17 @@
 # Authentication Server
 
-?> Author: Jimmy Lan, Date Created: 2021-03-12, Last Updated: 2021-04-11
+?> Author: Jimmy Lan, Date Created: 2021-03-12, Last Updated: 2021-05-03
 
 ---
+
+> In this article, we will go over some high-level details of this node.js authentication template. If you are currently reading this document on GitHub, please note that you could [read this documentation on our website](https://lanyanxiang.github.io/template-node-authentication/) for better experience.
+> We will explore:
+> * [Overview](#overview)
+> * [License and Contribution Note](#license-and-contribution-note)
+> * [Onboard this Project](#onboard-this-project)
+> * [Useful Commands](#commands)
+> * [Configurations](#configurations)
+> * [Next Steps](#next-steps)
 
 ## Overview
 
@@ -14,6 +23,16 @@ The server is capable to perform basic authentication strategy, bearer authentic
 
 The project uses [Typescript](https://www.typescriptlang.org/) and **is opinionated**.
 It is initially meant to serve as a starting point for personal and enterprise [Node.js](https://nodejs.org/en/) projects inside of [Poly Team Solutions](https://github.com/Poly-Team).
+
+## License and Contribution Note
+
+According to the decision made in an internal Poly Team meeting, this repository will become open-source and will be released under GNU General Public License v3.0 starting May 3rd, 2021.
+Please find more information in the file named `LICENSE` or `LICENSE.md` in the root repository.
+
+Despite usable, this project is currently under development process.
+Due to this, although we decided to make this project open-sourced, we will not accept any contributions (pull requests) from outside of Poly Team Solutions during this time.
+This decision may or may not change in the future.
+However, you are always free to use or modify this code in your own project(s), if applicable, as long as you follow the terms outlined in the `LICENSE` file described above.
 
 ## Onboard this Project
 
@@ -68,7 +87,7 @@ npm run testc
 
 Please look at `package.json` for other available scripts.
 
-## Configuration
+## Configurations
 
 ### Environment variables
 
@@ -98,3 +117,7 @@ In development mode, I recommend the use of `dotenv` package.
 This template has `dotenv` installed as a development dependency, and variables will be drawn from the `.env` file under **development** mode.
 
 A recommended approach to set up the environment variables is to copy the file `.env.example` and rename the copy `.env`, then start changing the values inside the file based on your project needs.
+
+## Next Steps
+
+Coming soon
