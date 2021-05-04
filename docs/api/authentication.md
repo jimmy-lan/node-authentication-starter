@@ -5,6 +5,10 @@
 ---
 
 > In this article, we will list information relating to authentication routes.
+> We will explore:
+>
+> - [List of Authentication Endpoints](#list-of-authentication-endpoints)
+> - [Special Headers for Authentication](#special-headers-for-authentication)
 
 ## List of Authentication Endpoints
 
