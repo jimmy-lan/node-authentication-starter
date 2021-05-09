@@ -1,6 +1,6 @@
 # Authentication API
 
-?> Author: Jimmy Lan, Date Created: 2021-05-03, Last Updated: 2021-05-03
+?> Author: Jimmy Lan, Date Created: 2021-05-03, Last Updated: 2021-05-09
 
 ---
 
@@ -61,4 +61,4 @@ Please note that the operation of generating new tokens are subject to a low rat
 This means, if you fail to store the new tokens and continue to use the expired ones, the server will attempt to generate new tokens on every request.
 As a result, your client will start to receive **429 - Rate Limited** errors very quickly.
 
-?> **Tips:** The access token can expire any time. It is considered best practices having some universal logic on the front-end to handle these response headers.
+?> **Tips:** The access token can expire at any time. It is considered best practices having some universal logic on the front-end to handle these response headers.
