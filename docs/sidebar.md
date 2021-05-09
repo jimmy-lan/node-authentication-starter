@@ -6,6 +6,7 @@
 
 - [Overview](/README.md)
 - [Setup Guide](/onboard/setup.md)
+- [Folder Structure](/onboard/folder-structure.md)
 
 **API**
 
