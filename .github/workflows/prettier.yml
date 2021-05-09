@@ -1,0 +1,31 @@
+# This GitHub action prettifies code.
+name: CI-Prettier
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+jobs:
+  prettier:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+          # This is important to fetch the changes to the previous commit
+          fetch-depth: 0
+      - name: Prettify code
+        uses: creyD/prettier_action@v3.1
+        with:
+          prettier_options: --write **/*.{ts,tsx,js,jsx,md}
+          only_changed: True
+          commit_message: "Prettify changed files"
+          commit_options: "--author='poly-team-bot <bot@thepolyteam.com>'"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
