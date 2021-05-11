@@ -6,12 +6,13 @@
 
 > In this article, we will go over some high-level details of this node.js authentication template. If you are currently reading this document on GitHub, please note that you could [read this documentation on our website](https://lanyanxiang.github.io/template-node-authentication/) for better experience.
 > We will explore:
-> * [Overview](#overview)
-> * [License and Contribution Note](#license-and-contribution-note)
-> * [Onboard this Project](#onboard-this-project)
-> * [Useful Commands](#commands)
-> * [Configurations](#configurations)
-> * [Next Steps](#next-steps)
+>
+> - [Overview](#overview)
+> - [License and Contribution Note](#license-and-contribution-note)
+> - [Onboard this Project](#onboard-this-project)
+> - [Useful Commands](#commands)
+> - [Configurations](#configurations)
+> - [Next Steps](#next-steps)
 
 ## Overview
 
@@ -19,7 +20,7 @@ This repository includes the necessary files to quickly bootstrap a [Node.js](ht
 
 The server is capable to perform basic authentication strategy, bearer authentication strategy (through refresh tokens), and [OAuth](https://oauth.net/2/).
 
-[Rate limiting](https://en.wikipedia.org/wiki/Rate_limiting) techniques are also implemented and will be explained in another page of this documentation.
+[Rate limiting](https://en.wikipedia.org/wiki/Rate_limiting) techniques are also implemented and will be explained in [this page](onboard/rate-limiters.md) of this documentation.
 
 The project uses [Typescript](https://www.typescriptlang.org/) and **is opinionated**.
 It is initially meant to serve as a starting point for personal and enterprise [Node.js](https://nodejs.org/en/) projects inside of [Poly Team Solutions](https://github.com/Poly-Team).
@@ -37,7 +38,7 @@ However, you are always free to use or modify this code in your own project(s), 
 ## Onboard this Project
 
 Are you reading this page on GitHub? Consider viewing the documentation from a website for better experience.
-Clone this repository and run ```npm run doc``` to read the documentation locally on your machine.
+Clone this repository and run `npm run doc` to read the documentation locally on your machine.
 Alternatively, you can use the following link: https://lanyanxiang.github.io/template-node-authentication/.
 
 If you don't find the set-up process intuitive enough, please have a look at this [setup guide](./onboard/setup.md).
@@ -52,7 +53,7 @@ Therefore, I strongly encourage you to become familiar with them as soon as poss
 
 ### Set up project
 
-```bash 
+```bash
 npm install
 ```
 
@@ -72,11 +73,13 @@ npm run watch-ts
 ```
 
 ### Start documentation site
+
 ```bash
 npm run doc
 ```
 
 ### Run tests
+
 ```bash
 # Run test in regular watch mode
 npm run test

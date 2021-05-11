@@ -1,6 +1,6 @@
 # Authentication API
 
-?> Author: Jimmy Lan, Date Created: 2021-05-03, Last Updated: 2021-05-09
+?> Author: Jimmy Lan, Date Created: 2021-05-03, Last Updated: 2021-05-10
 
 ---
 
@@ -33,7 +33,7 @@ The values for these headers must have the formats:
 
 - **Authorization**: [token type] [token string]. Note that token type must be in lowercase and there is exactly one space between token type and token string.
 
-- **X-Refresh-Token**: [token string].
+- **X-Refresh-Token**: refresh [token string].
 
 The `authorization` field is reserved for access tokens, and the `x-refresh-token` field is used for refresh tokens.
 When an access token becomes invalid, our server will attempt to use the refresh token supplied in the header to generate a new access token for the user.
@@ -46,7 +46,9 @@ You can read more about JSON web tokens on the [official documentation](https://
 
 An example entry for the `authorization` header will resemble the following:
 
-> bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2MDkxYzlhNmQ4YzFlMDU1Y2ZkYWI2OTgifSwiaWF0IjoxNjIwMTY3MDc4ODIyLCJkYXRhIjp7InJvbGUiOiJtZW1iZXIifSwiZXhwIjoxNjIwMTY3Mzc4ODIyfQ.mB-ATuyuqAMRODuyKCqgcQPiGOovZUemQA52EYqacbCdGTlRxy2xtehoC7MbU-TOqblZnCkWVuOnwsUHEPbXHw
+```
+bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2MDkxYzlhNmQ4YzFlMDU1Y2ZkYWI2OTgifSwiaWF0IjoxNjIwMTY3MDc4ODIyLCJkYXRhIjp7InJvbGUiOiJtZW1iZXIifSwiZXhwIjoxNjIwMTY3Mzc4ODIyfQ.mB-ATuyuqAMRODuyKCqgcQPiGOovZUemQA52EYqacbCdGTlRxy2xtehoC7MbU-TOqblZnCkWVuOnwsUHEPbXHw
+```
 
 ### Response Headers
 

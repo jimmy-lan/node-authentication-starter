@@ -7,6 +7,7 @@
 - [Overview](/README.md)
 - [Setup Guide](/onboard/setup.md)
 - [Folder Structure](/onboard/folder-structure.md)
+- [Rate Limiters](/onboard/rate-limiters.md)
 
 **API**
 
