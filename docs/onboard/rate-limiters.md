@@ -1,4 +1,4 @@
-# Rate Limiters
+# Understanding Rate Limiters
 
 ?> Author: Jimmy Lan, Date Created: 2021-05-10, Last Updated: 2021-05-10
 
@@ -42,6 +42,9 @@ Combining the two rate limiters, a bursty rate limiter is essentially saying to 
 
 Therefore, we can safely set A to a smaller number and B to a larger value.
 This accommodates usage peaks **and** prevents request overflow in a portion of the big cycle.
+
+You can read more about the concept of bursty rate limiters here: https://dev.to/animir/token-bucket-vs-bursty-rate-limiter-a5c.
+The package that we use for the rate-limiting functionality can be found here: https://www.npmjs.com/package/rate-limiter-flexible.
 
 ## Rate Limiting Configuration
 
