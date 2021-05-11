@@ -49,3 +49,5 @@ router.post(
     });
   }
 );
+
+export { router as signOutRouter };
