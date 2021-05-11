@@ -72,7 +72,26 @@ describe("sign out api", () => {
     await tearDownMongo();
   });
 
-  it("responds with 200 and updates client secret when user signs out", async () => {
+  it("responds with 401 unauthorized if an invalid authorization token is provided.", async () => {
+    const response = await request(app)
+      .post(apiLink("/signout"))
+      .set("Authorization", "bearer jqir2u1302iu3r912mdwjeqi0xjmx123u")
+      .send()
+      .expect(401);
+
+    // Verify return value
+    expect(response.body.success).toBeDefined();
+    expect(response.body.success).toBeFalsy();
+
+    // Verify clientSecret has not been changed in the database
+    const userCollection = mongoose.connection.collection("users");
+    const userDocument = await userCollection.findOne({
+      email: sampleUser.email,
+    });
+    expect(sampleUser.clientSecret).toEqual(userDocument.clientSecret);
+  });
+
+  it("responds with 200 and updates client secret when user signs out.", async () => {
     const response = await request(app)
       .post(apiLink("/signout"))
       .set("Authorization", `bearer ${sampleUser.accessToken}`)
