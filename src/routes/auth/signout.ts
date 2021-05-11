@@ -1,6 +1,10 @@
 /*
  * Created by Jimmy Lan
  * Creation Date: 2021-05-10
+ * Description:
+ *    In the current version, we do not send cookies to the client.
+ *    Therefore, the sign-out operation will only revoke all refresh
+ *    tokens from the client.
  */
 
 import { Request, Response, Router } from "express";
@@ -32,6 +36,8 @@ router.post(
       throw new NotFoundError(`User ${userId} not found.`);
     }
 
+    // By updating the client secret for this user, all previously issued
+    // refresh tokens are revoked.
     user.clientSecret = PasswordEncoder.randomString(
       tokenConfig.clientSecretLength
     );
