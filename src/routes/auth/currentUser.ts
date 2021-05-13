@@ -18,14 +18,14 @@ import { UnauthorizedError } from "../../errors";
  */
 export interface CurrentUserResBody extends ResBody {
   payload: {
-    email: String;
+    email: string;
     role: UserRole;
     profile: {
       name: {
-        first: String;
-        last: String;
+        first: string;
+        last: string;
       };
-      avatar?: String;
+      avatar?: string;
     };
   };
 }
