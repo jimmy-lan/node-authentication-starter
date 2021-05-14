@@ -13,7 +13,7 @@ export * from "./rateLimit";
  */
 export const getMissingEnvVariables = (variables: string[]): string[] => {
   const missingVariables = [];
-  for (let variable of variables) {
+  for (const variable of variables) {
     if (!process.env[variable]) {
       missingVariables.push(variable);
     }

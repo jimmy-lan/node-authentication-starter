@@ -8,7 +8,7 @@ import { promisify } from "util";
 
 interface OwnRedisClient extends RedisClient {
   getAsync: (arg1: string) => Promise<string | null>;
-  setAsync: Function;
+  setAsync: (arg1: string, arg2: string) => Promise<unknown>;
 }
 
 const redisConnection = process.env.REDIS_URI!;

@@ -15,10 +15,10 @@ export enum TokenType {
 }
 
 export interface TokenPayload {
-  sub: string | Object;
+  sub: string | Record<string, unknown>;
   iat?: number;
   exp?: number;
-  data?: Object;
+  data?: Record<string, unknown>;
 }
 
 export class TokenProcessor {
