@@ -4,7 +4,7 @@
   "description": "Template for node.js authentication with Mongo DB and Redis.",
   "main": "dist/index.js",
   "scripts": {
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "watch-node": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
