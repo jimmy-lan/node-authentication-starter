@@ -14,12 +14,14 @@
 
 Prefix: `/api/v<version_number>/users`
 
-| Path            | Method | Function                     | Request Body                         | Request Header |
-| --------------- | ------ | ---------------------------- | ------------------------------------ | -------------- |
-| /signin         | POST   | Sign In                      | email, password                      | -              |
-| /signup         | POST   | Sign Up                      | email, password, firstName, lastName | -              |
-| /current        | GET    | Check current signed-in user | -                                    | auth headers\* |
-| /reset-password | POST   | Request password reset       | email                                | -              |
+| Path                   | Method | Function                         | Request Body                         | Request Header |
+| ---------------------- | ------ | -------------------------------- | ------------------------------------ | -------------- |
+| /signin                | POST   | Sign In                          | email, password                      | -              |
+| /signup                | POST   | Sign Up                          | email, password, firstName, lastName | -              |
+| /current               | GET    | Check current signed-in user     | -                                    | auth headers\* |
+| /reset-password        | POST   | Request password reset           | email                                | -              |
+| /reset-password/:token | POST   | Complete password reset          | newPassword                          | -              |
+| /sign-out              | POST   | Revoke all issued refresh tokens | -                                    | auth headers\* |
 
 \* **auth headers**: Refers to a set of authentication headers required as proof-of-identity. Please see [Special Headers for Authentication](#special-headers-for-authentication) for more information.
 
