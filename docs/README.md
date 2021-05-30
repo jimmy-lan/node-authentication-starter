@@ -4,7 +4,7 @@
 
 ---
 
-> In this article, we will go over some high-level details of this node.js authentication template. If you are currently reading this document on GitHub, please note that you could [read this documentation on our website](https://lanyanxiang.github.io/template-node-authentication/) for better experience.
+> In this article, we will go over some high-level details of this node.js authentication template. If you are currently reading this document on GitHub, please note that you could [read this documentation on our website](https://lanyanxiang.github.io/node-authentication-starter/) for better experience.
 > We will explore:
 >
 > - [Overview](#overview)
@@ -39,7 +39,7 @@ However, you are always free to use or modify this code in your own project(s), 
 
 Are you reading this page on GitHub? Consider viewing the documentation from a website for better experience.
 Clone this repository and run `npm run doc` to read the documentation locally on your machine.
-Alternatively, you can use the following link: https://lanyanxiang.github.io/template-node-authentication/.
+Alternatively, you can use the following link: https://lanyanxiang.github.io/node-authentication-starter/.
 
 If you don't find the set-up process intuitive enough, please have a look at this [setup guide](./onboard/setup.md).
 Joining or extending a project may be a challenging experience for some.
@@ -106,7 +106,7 @@ An error will be thrown, causing the process to halt if one or more of these var
 **For example,**
 
 ```
-> template-node-authentication@1.0.0 dev
+> node-authentication-starter@1.0.0 dev
 > ts-node-dev src/index.ts
 
 [INFO] 17:24:09 ts-node-dev ver. 1.1.6 (using ts-node ver. 9.1.1, typescript ver. 4.2.2)
