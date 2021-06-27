@@ -11,7 +11,7 @@ import "express-async-errors";
 import { authRouter } from "./routes";
 import { handleErrors } from "./middlewares";
 import { NotFoundError } from "./errors";
-import { requireAuth, rateLimitIp } from "./middlewares";
+import { rateLimitIp } from "./middlewares";
 
 const app = express();
 
