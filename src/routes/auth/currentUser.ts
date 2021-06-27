@@ -70,4 +70,4 @@ router.get(
   }
 );
 
-export { router as currentUserRoute };
+export { router as currentUserRouter };
