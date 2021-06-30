@@ -9,7 +9,7 @@
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": 1,
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-inferrable-types": [
       "warn", {
         "ignoreParameters": true
@@ -17,6 +17,7 @@
     ],
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-namespace": "off"
   }
 }
