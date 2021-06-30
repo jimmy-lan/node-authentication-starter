@@ -26,3 +26,7 @@ export const requireRoles = (roles: UserRole[]) => {
     },
   ];
 };
+
+export const requireRole = (role: UserRole) => {
+  return requireRoles([role]);
+};
