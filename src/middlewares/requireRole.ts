@@ -4,11 +4,10 @@
  *    Middleware which expose route to authenticated user with one or
  *    more particular roles.
  */
-
+import { NextFunction } from "express";
 import { NotFoundError } from "../errors";
 import { requireAuth } from "./requireAuth";
 import { UserRole } from "../types";
-import { NextFunction } from "express";
 
 export const requireRoles = (roles: UserRole[]) => {
   return [
