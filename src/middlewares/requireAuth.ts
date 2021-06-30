@@ -44,15 +44,6 @@ const extractTokenFromHeader = (
   return raw.slice(prefix?.length).trim();
 };
 
-// Override Express declaration to include currentUser property
-declare global {
-  namespace Express {
-    interface Request {
-      user?: AccessTokenPayload["sub"] & AccessTokenPayload["data"];
-    }
-  }
-}
-
 const verifyAccessToken = (
   accessToken: string,
   tokenProcessor: TokenProcessor
