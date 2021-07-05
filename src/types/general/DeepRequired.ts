@@ -1,3 +1,7 @@
+/*
+ * Created by Jimmy Lan
+ */
+
 /**
  * Mark all keys in type `T` as `Required`.
  */

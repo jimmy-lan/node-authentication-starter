@@ -1,3 +1,7 @@
+/*
+ * Created by Jimmy Lan
+ */
+
 import { Document } from "mongoose";
 import { DeepRequired } from "../general";
 
