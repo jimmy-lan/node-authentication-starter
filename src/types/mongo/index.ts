@@ -3,3 +3,4 @@
  */
 
 export * from "./MongoDocument";
+export * from "./Timestamp";
