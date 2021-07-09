@@ -7,3 +7,4 @@ export * from "./UserRole";
 export * from "./response";
 export * from "./Token";
 export * from "./general";
+export * from "./mongo";
