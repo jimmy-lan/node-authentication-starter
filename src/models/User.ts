@@ -7,7 +7,7 @@
 import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
 
 import { PasswordEncoder } from "../services";
-import { UserRole } from "../types";
+import { MongoDocument, UserRole } from "../types";
 import { tokenConfig } from "../config";
 
 /**
@@ -36,25 +36,7 @@ export interface UserProps {
  * Interface that describes the properties in a user
  * document. Required by mongoose.
  */
-export type UserDocument = Document<UserProps> & {
-  email: string;
-  password: string;
-  /** Part of key used to generate refresh token, unique for each client */
-  clientSecret: string;
-  role: UserRole;
-
-  profile: {
-    name: {
-      first: string;
-      last: string;
-    };
-    avatar: string;
-  };
-
-  // These fields are automatically appended by mongodb.
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type UserDocument = MongoDocument<UserProps>;
 
 /**
  * Schema used to model users. Required by mongoose.
