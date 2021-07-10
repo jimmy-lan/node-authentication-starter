@@ -4,8 +4,7 @@
  * Description: File holding a user model.
  */
 
-import mongoose, { Schema, Document, Model, HookNextFunction } from "mongoose";
-
+import mongoose, { Schema, Model, HookNextFunction } from "mongoose";
 import { PasswordEncoder } from "../services";
 import { MongoDocument, UserRole } from "../types";
 import { tokenConfig } from "../config";
