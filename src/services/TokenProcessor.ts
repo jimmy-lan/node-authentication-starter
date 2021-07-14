@@ -44,21 +44,7 @@ export class TokenProcessor {
     }
 
     if (!payload.exp) {
-      switch (tokenType) {
-        case TokenType.access:
-          // Set 5 minute expiration time for access tokens
-          payload.exp = payload.iat + tokenConfig.defaultExpirations.access;
-          // payload.exp = payload.iat + 5 * 60 * 1000;
-          break;
-        case TokenType.reset:
-          // Set 10 minute expiration time for password reset
-          payload.exp = payload.iat + tokenConfig.defaultExpirations.reset;
-          break;
-        case TokenType.refresh:
-          // Set 7 day expiration time for refresh tokens
-          payload.exp = payload.iat + tokenConfig.defaultExpirations.refresh;
-          break;
-      }
+      payload.exp = payload.iat + TOKEN_TYPE_EXP_MAP[tokenType];
     }
 
     return jwt.sign(payload, secret, {
