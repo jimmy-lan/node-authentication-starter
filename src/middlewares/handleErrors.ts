@@ -3,7 +3,7 @@
  * Creation Date: 2020-11-30
  */
 
-import { NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler } from "express";
 import { HttpError } from "../errors";
 import { ResBody } from "../types";
 
@@ -24,12 +24,7 @@ import { ResBody } from "../types";
  * @param res Response provided by express.
  * @param next Next function provided by express. **DO NOT REMOVE!**
  */
-export const handleErrors = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const handleErrors: ErrorRequestHandler = (error, req, res, next) => {
   const response: ResBody = {
     success: false,
     errors: [{ message: "Oops, we can't process this request right now." }],
@@ -37,6 +32,13 @@ export const handleErrors = (
 
   if (error instanceof HttpError) {
     response.errors = error.serializeErrors();
+    return res.status(error.statusCode).send(response);
+  }
+
+  if (error.statusCode && error.statusCode < 500) {
+    if (error.message) {
+      response.errors = [error.message];
+    }
     return res.status(error.statusCode).send(response);
   }
 
