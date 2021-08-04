@@ -24,6 +24,7 @@ import { ResBody } from "../types";
  * @param res Response provided by express.
  * @param next Next function provided by express. **DO NOT REMOVE!**
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const handleErrors: ErrorRequestHandler = (error, req, res, next) => {
   const response: ResBody = {
     success: false,
